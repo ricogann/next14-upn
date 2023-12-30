@@ -7,7 +7,6 @@ type InfoFasilitasProps = {
 };
 
 const InfoFasilitas: React.FC<InfoFasilitasProps> = ({ data }) => {
-    console.log(data);
     return (
         <>
             <div className="font-montserrat mt-5 bg-[#FFFFFF] rounded-[13px] border-[#07393C] border-2 shadow-xl mr-1">
@@ -20,7 +19,7 @@ const InfoFasilitas: React.FC<InfoFasilitasProps> = ({ data }) => {
                             <div className="flex items-center gap-3 lg:mt-2">
                                 <div className="w-2 h-2 xl:w-2 xl:h-2 bg-black rounded-full"></div>
                                 <div className="text-black text-[10px] lg:text-[15px]">
-                                    <span>Closed</span> opens soon at 9:00 a.m
+                                    <span>Closed,</span> opens soon at 9:00 a.m
                                 </div>
                             </div>
                         </div>

@@ -19,12 +19,14 @@ export default function CarouselFasilitas() {
 
             setFasilitas(splitData(fasilitas.data, 5));
             setFasilitasMobile(splitData(fasilitas.data, 4));
+            setInfoFasilitas(fasilitas.data[0]);
         }
         initialize();
     }, []);
+
     return (
         <>
-            <div className="">
+            <div className="md:hidden">
                 <div className="carousel w-full">
                     {fasilitasMobile.map((item, index) => {
                         return (
@@ -41,7 +43,10 @@ export default function CarouselFasilitas() {
                                                 setInfoFasilitas(item)
                                             }
                                         >
-                                            <CardFasilitas data={item} />
+                                            <CardFasilitas
+                                                data={item}
+                                                className="rounded-[13px] w-[167px] h-[167px]"
+                                            />
                                         </div>
                                     );
                                 })}
@@ -50,6 +55,51 @@ export default function CarouselFasilitas() {
                     })}
                 </div>
                 {infoFasilitas && <InfoFasilitas data={infoFasilitas} />}
+            </div>
+            <div className="hidden md:flex md:flex-col md:items-center md:justify-center">
+                <div className="md:flex carousel w-full">
+                    {fasilitas.map((item, index) => {
+                        return (
+                            <div
+                                className="carousel-item grid grid-cols-3 gap-3 mx-5"
+                                key={index}
+                            >
+                                {item.map((item, index) => {
+                                    return index === 0 ? (
+                                        <div
+                                            key={index}
+                                            className="row-span-2 cursor-pointer relative flex flex-col rounded-lg"
+                                            onClick={() =>
+                                                setInfoFasilitas(item)
+                                            }
+                                        >
+                                            <CardFasilitas
+                                                data={item}
+                                                className="rounded-[13px] w-[230px] h-[420px] lg:w-[400px] md:rounded-b-none"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div
+                                            key={index}
+                                            className="cursor-pointer relative flex flex-col rounded-lg lg:w-[400px]"
+                                            onClick={() =>
+                                                setInfoFasilitas(item)
+                                            }
+                                        >
+                                            <CardFasilitas
+                                                data={item}
+                                                className="rounded-[13px] w-[230px] h-[180px] lg:w-[400px] lg:h-[178px] md:rounded-b-none"
+                                            />
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        );
+                    })}
+                </div>
+                <div className="w-full">
+                    {infoFasilitas && <InfoFasilitas data={infoFasilitas} />}
+                </div>
             </div>
         </>
     );

@@ -2,17 +2,21 @@ import { CoreAPI } from "../core";
 
 class AuthApi extends CoreAPI {
     async loginMahasiswa(json: any) {
-        const res = await this.fetch("/api/auth/login/mahasiswa", "POST", {
-            json: { ...json },
-        });
-
-        if (res.data.accessToken) {
-            this.setToken({ token: res.data.accessToken, expireable: true });
+        try {
+            const res = await this.fetch("/auth/login/mahasiswa", "POST", {
+                json: { ...json },
+            });
+            if (res.data.token) {
+                this.setToken({ token: res.data.token, expireable: true });
+            }
+            return res;
+        } catch (error) {
+            return error;
         }
     }
 
     async loginUmum(json: any) {
-        const res = await this.fetch("/api/auth/login/umum", "POST", {
+        const res = await this.fetch("/auth/login/umum", "POST", {
             json: { ...json },
         });
 
@@ -22,7 +26,7 @@ class AuthApi extends CoreAPI {
     }
 
     async loginUkm(json: any) {
-        const res = await this.fetch("/api/auth/login/ukm", "POST", {
+        const res = await this.fetch("/auth/login/ukm", "POST", {
             json: { ...json },
         });
 
@@ -32,7 +36,7 @@ class AuthApi extends CoreAPI {
     }
 
     async loginOrganisasi(json: any) {
-        const res = await this.fetch("/api/auth/login/organisasi", "POST", {
+        const res = await this.fetch("/auth/login/organisasi", "POST", {
             json: { ...json },
         });
 
@@ -42,7 +46,7 @@ class AuthApi extends CoreAPI {
     }
 
     async loginAdmin(json: any) {
-        const res = await this.fetch("/api/auth/login/admin", "POST", {
+        const res = await this.fetch("/auth/login/admin", "POST", {
             json: { ...json },
         });
 
@@ -52,7 +56,7 @@ class AuthApi extends CoreAPI {
     }
 
     async registerMahasiswa(formData: any) {
-        const res = await this.fetch("/api/auth/register/mahasiswa", "POST", {
+        const res = await this.fetch("/auth/register/mahasiswa", "POST", {
             body: formData,
         });
 
@@ -60,7 +64,7 @@ class AuthApi extends CoreAPI {
     }
 
     async registerUmum(formData: any) {
-        const res = await this.fetch("/api/auth/register/umum", "POST", {
+        const res = await this.fetch("/auth/register/umum", "POST", {
             body: formData,
         });
 
@@ -68,7 +72,7 @@ class AuthApi extends CoreAPI {
     }
 
     async registerUkm(formData: any) {
-        const res = await this.fetch("/api/auth/register/ukm", "POST", {
+        const res = await this.fetch("/auth/register/ukm", "POST", {
             body: formData,
         });
 
@@ -76,7 +80,7 @@ class AuthApi extends CoreAPI {
     }
 
     async registerOrganisasi(formData: any) {
-        const res = await this.fetch("/api/auth/register/organisasi", "POST", {
+        const res = await this.fetch("/auth/register/organisasi", "POST", {
             body: formData,
         });
 
