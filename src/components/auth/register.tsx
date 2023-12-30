@@ -1,10 +1,12 @@
 import { useState, useEffect, ChangeEvent } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { AiOutlineClose } from "react-icons/ai";
 import { AuthButton } from "../ui/auth-button";
 import Loading from "../ui/loading";
 
-import { getFakultas, getProdi, getTahunAjaran } from "@/hooks";
+import { getFakultas, getProdi, getTahunAjaran, registration } from "@/hooks";
 
 type RegisterFormProps = {
     toggle: () => void;
@@ -15,6 +17,19 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle }) => {
     const [fakultas, setFakultas] = useState([]);
     const [prodi, setProdi] = useState([]);
     const [tahunAjaran, setTahunAjaran] = useState([]);
+    const [register, setRegister] = useState({
+        npm: "",
+        nik: "",
+        nama: "",
+        email: "",
+        password: "",
+        fakultas: "1",
+        prodi: "1",
+        tahun_ajaran: "1",
+        no_telp: "",
+        nama_pj: "",
+        bukti: null,
+    });
 
     useEffect(() => {
         async function initialize() {
@@ -28,8 +43,55 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle }) => {
         }
         initialize();
     }, []);
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+
+        setRegister({
+            ...register,
+            [name]: value,
+        });
+    };
+
+    const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        const { name, value } = e.target;
+
+        setRegister({
+            ...register,
+            [name]: value,
+        });
+    };
+
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, files } = e.target;
+
+        setRegister({
+            ...register,
+            [name]: files ? files[0] : null,
+        });
+    };
+
+    const handleRegis = async () => {
+        const res = await registration(register, role);
+        if (res.status === true) {
+            toast.success("Registrasi berhasil", {
+                position: toast.POSITION.TOP_CENTER,
+            });
+        } else {
+            toast.error(res.error, {
+                position: toast.POSITION.TOP_CENTER,
+            });
+        }
+    };
+
+    const enterPressed = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            handleRegis();
+        }
+    };
     return (
         <>
+            <ToastContainer />
             <div className="fixed z-50 top-0 flex items-center justify-center backdrop-blur-xl h-screen w-screen">
                 <div className="p-6 h-[500px] overflow-auto text-black relative bg-white rounded-xl border-2 border-black shadow-xl">
                     <div className="flex justify-end" onClick={toggle}>
@@ -74,6 +136,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle }) => {
                                         ? "hidden"
                                         : "block"
                                 }`}
+                                onChange={handleChange}
                             />
                             <input
                                 name={`nik`}
@@ -85,6 +148,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle }) => {
                                         ? "hidden"
                                         : "block"
                                 }`}
+                                onChange={handleChange}
                             />
                         </div>
 
@@ -100,6 +164,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle }) => {
                                 name={`nama`}
                                 type="text"
                                 className={`bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]`}
+                                onChange={handleChange}
                             />
                         </div>
 
@@ -109,6 +174,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle }) => {
                                 name={`email`}
                                 type="email"
                                 className={` bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]`}
+                                onChange={handleChange}
                             />
                         </div>
 
@@ -118,6 +184,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle }) => {
                                 name={`password`}
                                 type="password"
                                 className={`bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]`}
+                                onChange={handleChange}
                             />
                         </div>
 
@@ -131,6 +198,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle }) => {
                                 <select
                                     name="fakultas"
                                     className="bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]"
+                                    onChange={handleSelectChange}
                                 >
                                     {fakultas.map((fakultas, index) => (
                                         <option
@@ -148,6 +216,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle }) => {
                                 <select
                                     name="prodi"
                                     className="bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]"
+                                    onChange={handleSelectChange}
                                 >
                                     {prodi.map((prodi, index) => (
                                         <option
@@ -168,6 +237,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle }) => {
                                     <select
                                         name="tahun_ajaran"
                                         className="bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]"
+                                        onChange={handleSelectChange}
                                     >
                                         {tahunAjaran.map(
                                             (tahunAjaran, index) => (
@@ -192,6 +262,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle }) => {
                                 name={`no_telp`}
                                 type="text"
                                 className={`bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]`}
+                                onChange={handleChange}
                             />
                         </div>
 
@@ -209,6 +280,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle }) => {
                                 name={`nama-pj`}
                                 type="text"
                                 className={`bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]`}
+                                onChange={handleChange}
                             />
                         </div>
 
@@ -244,10 +316,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle }) => {
                                 name={`bukti`}
                                 type="file"
                                 className={` bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]`}
+                                onChange={handleFileChange}
                             />
                         </div>
                     </div>
-                    <div className="mt-5">
+                    <div className="mt-5" onClick={handleRegis}>
                         <AuthButton message="Registrasi" />
                     </div>
                     <div className="flex items-center justify-center mt-8">

@@ -15,6 +15,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggle }) => {
     const [npm, setNpm] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const router = useRouter();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -46,10 +47,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggle }) => {
             toast.success("Login berhasil", {
                 position: toast.POSITION.TOP_CENTER,
             });
+            window.location.reload();
         } else if (res.status === false) {
             toast.error(res.error, {
                 position: toast.POSITION.TOP_CENTER,
             });
+        }
+    };
+
+    const enterPressed = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            handleLogin();
         }
     };
     return (
@@ -88,6 +96,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggle }) => {
                             className={`bg-[#ffffff] text-black border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px] md:w-[500px] md:p-3 lg:p-2 
                             `}
                             onChange={handleChange}
+                            onKeyDown={enterPressed}
                         />
                     </div>
                     <div className="">
@@ -99,6 +108,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggle }) => {
                             type="password"
                             className={`bg-[#ffffff] text-black border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px] md:w-[500px] md:p-3 lg:p-2`}
                             onChange={handleChange}
+                            onKeyDown={enterPressed}
                         />
                     </div>
                     <div className="mt-5 text-center">

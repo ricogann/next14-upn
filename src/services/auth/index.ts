@@ -56,11 +56,15 @@ class AuthApi extends CoreAPI {
     }
 
     async registerMahasiswa(formData: any) {
-        const res = await this.fetch("/auth/register/mahasiswa", "POST", {
-            body: formData,
-        });
+        try {
+            const res = await this.fetch("/auth/register/mahasiswa", "POST", {
+                body: formData,
+            });
 
-        return res;
+            return res;
+        } catch (error) {
+            return error;
+        }
     }
 
     async registerUmum(formData: any) {

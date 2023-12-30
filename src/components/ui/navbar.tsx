@@ -4,17 +4,38 @@ import logo_bpu from "../../../public/logo-bpu.png";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { BsPersonCircle } from "react-icons/bs";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 import LoginForm from "../auth/login";
 import RegisterForm from "../auth/register";
+import { parseJwt } from "@/libs/auth";
 
 export default function Navbar() {
     const [isLogin, setIsLogin] = useState(false);
     const [toggle, setToggle] = useState(false);
     const [toggleLogin, setToggleLogin] = useState(false);
     const [toggleRegister, setToggleRegister] = useState(false);
+    const [nama, setNama] = useState("");
+    const [openProfile, setOpenProfile] = useState(false);
 
+    useEffect(() => {
+        const token = Cookies.get("CERT");
+        if (token) {
+            const data = parseJwt(token);
+            if (!data.username_admin) {
+                setNama(parseJwt(Cookies.get("CERT")).nama);
+                setIsLogin(true);
+            } else {
+                window.location.href = "/admin/dashboard";
+            }
+        }
+    }, []);
+
+    const handleLogout = () => {
+        Cookies.remove("CERT");
+        window.location.href = "/";
+    };
     return (
         <>
             <div className="bg-[#F0EDEE] shadow-xl relative z-50 ">
@@ -104,6 +125,38 @@ export default function Navbar() {
                             >
                                 Login
                             </button>
+                            <div
+                                className={`${isLogin ? "relative" : "hidden"}`}
+                            >
+                                <div
+                                    className={`relative flex p-3 items-center gap-5 text-[#0A090C] shadow-xl border border-black ${
+                                        openProfile
+                                            ? `rounded-t-xl border-0`
+                                            : ` rounded-xl`
+                                    } cursor-pointer`}
+                                    onClick={() => setOpenProfile(!openProfile)}
+                                >
+                                    <BsPersonCircle className={`text-2xl`} />
+                                    <>{nama && nama}</>
+                                </div>
+                                <div
+                                    className={`${
+                                        openProfile
+                                            ? `flex flex-col gap-2`
+                                            : `hidden`
+                                    } absolute right-0 -bottom-[95px] border w-[200px] p-5 bg-[#ffffff] z-50 rounded-b-xl rounded-tl-xl`}
+                                >
+                                    <div className="cursor-pointer hover:font-bold">
+                                        Profile
+                                    </div>
+                                    <div
+                                        className="cursor-pointer hover:font-bold"
+                                        onClick={handleLogout}
+                                    >
+                                        Logout
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
