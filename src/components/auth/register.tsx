@@ -72,6 +72,21 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle }) => {
     };
 
     const handleRegis = async () => {
+        if (
+            register.npm === "" ||
+            register.nik === "" ||
+            register.nama === "" ||
+            register.email === "" ||
+            register.password === "" ||
+            register.no_telp === "" ||
+            register.nama_pj === "" ||
+            register.bukti === null
+        ) {
+            toast.error("Mohon isi semua data", {
+                position: toast.POSITION.TOP_CENTER,
+            });
+            return;
+        }
         const res = await registration(register, role);
         if (res.status === true) {
             toast.success("Registrasi berhasil", {

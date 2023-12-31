@@ -45,12 +45,20 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggle }) => {
         });
         if (res.status === true) {
             toast.success("Login berhasil", {
-                position: toast.POSITION.TOP_CENTER,
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
             });
             window.location.reload();
         } else if (res.status === false) {
             toast.error(res.error, {
-                position: toast.POSITION.TOP_CENTER,
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
             });
         }
     };
@@ -62,9 +70,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggle }) => {
     };
     return (
         <>
-            <ToastContainer />
-
-            <div className="fixed z-50 top-0 flex items-center justify-center backdrop-blur-xl h-screen w-screen">
+            <div className="fixed z-50 top-0 right-0 flex items-center justify-center backdrop-blur-xl h-screen w-screen">
+                <ToastContainer />
                 <div className="p-5 bg-white rounded-xl text-black border-2 border-black shadow-xl">
                     <div className="flex justify-end" onClick={toggle}>
                         <AiOutlineClose className="text-2xl cursor-pointer" />

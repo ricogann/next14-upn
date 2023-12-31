@@ -7,17 +7,17 @@ class FasilitasApi extends CoreAPI {
     }
 
     async getFasilitasById(id: string) {
-        const res = await this.fetch(`/api/fasilitas/${id}`, "GET");
+        const res = await this.fetch(`/fasilitas/${id}`, "GET");
         return res;
     }
 
-    async getHargaFasilitas(id: string) {
-        const res = await this.fetch(`/api/fasilitas/${id}/harga`, "GET");
+    async getHargaFasilitas(id: number) {
+        const res = await this.fetch(`/harga/fasilitas/${id}`, "GET");
         return res;
     }
 
     async updateFasilitas(id: string, formData: any) {
-        const res = await this.fetch(`/api/fasilitas/${id}`, "PUT", {
+        const res = await this.fetch(`/fasilitas/${id}`, "PUT", {
             body: formData,
             isNeedToken: true,
         });
@@ -26,7 +26,7 @@ class FasilitasApi extends CoreAPI {
     }
 
     async addFasilitas(formData: any) {
-        const res = await this.fetch("/api/fasilitas", "POST", {
+        const res = await this.fetch("/fasilitas", "POST", {
             body: formData,
             isNeedToken: true,
         });
@@ -35,7 +35,7 @@ class FasilitasApi extends CoreAPI {
     }
 
     async deleteFasilitas(id: string) {
-        const res = await this.fetch(`/api/fasilitas/${id}`, "DELETE", {
+        const res = await this.fetch(`/fasilitas/${id}`, "DELETE", {
             isNeedToken: true,
         });
 

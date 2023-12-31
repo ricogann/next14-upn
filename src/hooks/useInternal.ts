@@ -1,8 +1,16 @@
-import { fasilitasApi, campusApi } from "@/services";
+import { fasilitasApi, campusApi, bookingApi } from "@/services";
 
 // fasilitas
 export const getFasilitas = async () => {
     return await fasilitasApi.getFasilitas();
+};
+
+export const getFasilitasById = async (id: string) => {
+    return await fasilitasApi.getFasilitasById(id);
+};
+
+export const getHargaFasilitas = async (id: number) => {
+    return await fasilitasApi.getHargaFasilitas(id);
 };
 
 // campus
@@ -16,4 +24,9 @@ export const getProdi = async () => {
 
 export const getTahunAjaran = async () => {
     return await campusApi.getTahunAjaran();
+};
+
+// booking
+export const getBooking = async () => {
+    return await bookingApi.getBooking();
 };

@@ -1,12 +1,26 @@
 import FasilitasDTO from "@/interfaces/fasilitasDTO";
 import { BsFillPinMapFill } from "react-icons/bs";
 import { MdOutlineWatchLater, MdPayment } from "react-icons/md";
+import { useState, useEffect } from "react";
+import LoginForm from "../auth/login";
+import Cookies from "js-cookie";
 
 type InfoFasilitasProps = {
     data: FasilitasDTO;
 };
 
 const InfoFasilitas: React.FC<InfoFasilitasProps> = ({ data }) => {
+    const [toggleLogin, setToggleLogin] = useState(false);
+    const [isLogin, setIsLogin] = useState(false);
+
+    useEffect(() => {
+        if (Cookies.get("CERT")) {
+            setIsLogin(true);
+        } else {
+            setIsLogin(false);
+        }
+    }, []);
+
     return (
         <>
             <div className="font-montserrat mt-5 bg-[#FFFFFF] rounded-[13px] border-[#07393C] border-2 shadow-xl mr-1">
@@ -28,7 +42,15 @@ const InfoFasilitas: React.FC<InfoFasilitasProps> = ({ data }) => {
                                 More Info
                             </button>
                             <button
-                                className={`w-24 bg-[#07393C] hover:bg-[#F0EDEE] hover:text-[#0A090C] text-white font-bold p-1 lg:p-2 text-[10px] border-black border-[2px] xl:text-[17px] xl:w-32 rounded-lg`}
+                                className={`w-24 bg-[#07393C] hover:bg-[#F0EDEE] hover:text-[#0A090C] text-white font-bold p-1 lg:p-2 text-[10px] border-black border-[2px] xl:text-[17px] xl:w-32 rounded-lg
+                                `}
+                                onClick={() => {
+                                    if (isLogin) {
+                                        window.location.href = `/`;
+                                    } else {
+                                        setToggleLogin(!toggleLogin);
+                                    }
+                                }}
                             >
                                 Book Now
                             </button>
@@ -70,6 +92,9 @@ const InfoFasilitas: React.FC<InfoFasilitasProps> = ({ data }) => {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className={`${toggleLogin ? "" : "hidden"}`}>
+                <LoginForm toggle={() => setToggleLogin(!toggleLogin)} />
             </div>
         </>
     );
