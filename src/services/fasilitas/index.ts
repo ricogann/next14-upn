@@ -16,6 +16,11 @@ class FasilitasApi extends CoreAPI {
         return res;
     }
 
+    async getAllHargaFasilitas() {
+        const res = await this.fetch(`/harga/`, "GET");
+        return res;
+    }
+
     async updateFasilitas(id: string, formData: any) {
         const res = await this.fetch(`/fasilitas/${id}`, "PUT", {
             body: formData,

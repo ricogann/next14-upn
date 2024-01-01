@@ -13,6 +13,10 @@ export const getHargaFasilitas = async (id: number) => {
     return await fasilitasApi.getHargaFasilitas(id);
 };
 
+export const getAllHargaFasilitas = async () => {
+    return await fasilitasApi.getAllHargaFasilitas();
+};
+
 // campus
 export const getFakultas = async () => {
     return await campusApi.getFakultas();
