@@ -30,3 +30,7 @@ export const getTahunAjaran = async () => {
 export const getBooking = async () => {
     return await bookingApi.getBooking();
 };
+
+export const getBookingByIdUser = async (id: string) => {
+    return await bookingApi.getBookingByIdUser(id);
+};

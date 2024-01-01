@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 export default function CardProfile() {
     return (
         <>
-            <div className="bg-[#FFFFFF] flex m-8 mt-7 flex-col gap-3 p-8 rounded-[15px] shadow-lg xl:flex-row text-[#0A090C]">
+            <div className="bg-[#FFFFFF] flex m-8 mt-7 flex-col gap-3 p-8 rounded-[15px] shadow-lg text-[#0A090C] xl:px-14 xl:py-10 xl:mx-36">
                 <div className="">
                     <h1 className="text-[22px] font-bold">Profile</h1>
                     <div className="bg-[#07393C] w-[150px] py-[1px] mt-1"></div>
