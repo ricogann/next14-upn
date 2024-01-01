@@ -77,3 +77,7 @@ export const registration = async (data: any, role: string) => {
         return await authApi.registerOrganisasi(formData);
     }
 };
+
+export const loginAdmin = async (data: any) => {
+    return await authApi.loginAdmin(data);
+};

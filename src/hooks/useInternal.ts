@@ -1,4 +1,4 @@
-import { fasilitasApi, campusApi, bookingApi } from "@/services";
+import { fasilitasApi, campusApi, bookingApi, usersApi } from "@/services";
 
 // fasilitas
 export const getFasilitas = async () => {
@@ -33,4 +33,9 @@ export const getBooking = async () => {
 
 export const getBookingByIdUser = async (id: string) => {
     return await bookingApi.getBookingByIdUser(id);
+};
+
+// user
+export const getUsers = async () => {
+    return await usersApi.getUsers();
 };

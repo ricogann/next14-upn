@@ -49,9 +49,8 @@ class AuthApi extends CoreAPI {
         const res = await this.fetch("/auth/login/admin", "POST", {
             json: { ...json },
         });
-
-        if (res.data.accessToken) {
-            this.setToken({ token: res.data.accessToken, expireable: true });
+        if (res.data.token) {
+            this.setToken({ token: res.data.token, expireable: true });
         }
     }
 
