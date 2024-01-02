@@ -6,12 +6,14 @@ import { BsPersonCircle } from "react-icons/bs";
 
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 import LoginForm from "../auth/login";
 import RegisterForm from "../auth/register";
 import { parseJwt } from "@/libs/auth";
 
 export default function Navbar() {
+    const router = useRouter();
     const [isLogin, setIsLogin] = useState(false);
     const [toggle, setToggle] = useState(false);
     const [toggleLogin, setToggleLogin] = useState(false);
@@ -58,7 +60,12 @@ export default function Navbar() {
                                 }`}
                             >
                                 <div className="bg-[#cdcdcd] flex flex-col gap-2 p-3 rounded-md">
-                                    <button className=" text-black font-semibold">
+                                    <button
+                                        className=" text-black font-semibold"
+                                        onClick={() =>
+                                            (window.location.href = "/")
+                                        }
+                                    >
                                         Home
                                     </button>
                                     <button
@@ -90,6 +97,7 @@ export default function Navbar() {
                                         className={`text-black font-semibold ${
                                             isLogin ? "" : "hidden"
                                         }`}
+                                        onClick={() => router.push("/profile")}
                                     >
                                         Profile
                                     </button>
@@ -104,7 +112,12 @@ export default function Navbar() {
                             </div>
                         </div>
                         <div className="hidden md:flex md:gap-14 text-[#0A090C] font-semibold font-montserrat">
-                            <button className="">Home</button>
+                            <button
+                                className=""
+                                onClick={() => router.push("/")}
+                            >
+                                Home
+                            </button>
                             <button
                                 name="register"
                                 className={`${isLogin ? "hidden" : "block"}`}
@@ -146,7 +159,10 @@ export default function Navbar() {
                                             : `hidden`
                                     } absolute right-0 -bottom-[95px] border w-[200px] p-5 bg-[#ffffff] z-50 rounded-b-xl rounded-tl-xl`}
                                 >
-                                    <div className="cursor-pointer hover:font-bold">
+                                    <div
+                                        className="cursor-pointer hover:font-bold"
+                                        onClick={() => router.push("/profile")}
+                                    >
                                         Profile
                                     </div>
                                     <div

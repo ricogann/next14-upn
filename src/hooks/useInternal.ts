@@ -54,16 +54,32 @@ export const getUsersUmum = async () => {
     return await usersApi.getUsersUmum();
 };
 
+export const getUsersUmumById = async (id: string) => {
+    return await usersApi.getUsersUmumById(id);
+};
+
 export const getUsersUkm = async () => {
     return await usersApi.getUsersUkm();
+};
+
+export const getUsersUkmById = async (id: string) => {
+    return await usersApi.getUsersUkmById(id);
 };
 
 export const getUsersMahasiswa = async () => {
     return await usersApi.getUsersMahasiswa();
 };
 
+export const getUsersMahasiswaById = async (id: string) => {
+    return await usersApi.getUsersMahasiswaById(id);
+};
+
 export const getUsersOrganisasi = async () => {
     return await usersApi.getUsersOrganisasi();
+};
+
+export const getUsersOrganisasiById = async (id: string) => {
+    return await usersApi.getUsersOrganisasiById(id);
 };
 
 // misc

@@ -39,8 +39,8 @@ const CardFasilitas = ({ booking, fasilitas }: CardFasilitasProps) => {
                                 {fasilitas && fasilitas.nama}
                             </h2>
                             <div className="flex items-start gap-2">
-                                <HiLocationMarker className="text-2xl md:text-lg md:block text-[#0A090C] xl:text-3xl" />
-                                <h2 className="text-[12px] md:text-[14px] text-[#0A090C] xl:w-[380px]">
+                                <HiLocationMarker className="text-2xl md:text-lg md:block text-[#0A090C]" />
+                                <h2 className="text-[12px] md:text-[14px] text-[#0A090C] xl:w-[380px] xl:text-[17px]">
                                     {fasilitas && fasilitas.alamat}
                                 </h2>
                             </div>
@@ -66,7 +66,7 @@ const CardFasilitas = ({ booking, fasilitas }: CardFasilitasProps) => {
                                             <div className="flex items-center gap-3">
                                                 <input
                                                     type="date"
-                                                    className="border rounded-md px-2 py-1 w-[130px] text-[12px] xl:text-[15px] xl:h-[30px] xl:w-[150px] h-8 focus:outline-none focus:border-blue-500"
+                                                    className="border rounded-md px-2 py-1 w-[130px] text-[12px] xl:text-[15px] xl:h-[30px] xl:w-[150px] h-8 focus:outline-none focus:border-blue-500 text-white"
                                                     min={
                                                         new Date()
                                                             .toISOString()

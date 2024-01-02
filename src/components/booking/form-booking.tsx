@@ -7,10 +7,12 @@ import { usePathname } from "next/navigation";
 import FasilitasDTO from "@/interfaces/fasilitasDTO";
 import BookingDTO from "@/interfaces/bookingDTO";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
-import { getHargaFasilitas } from "@/hooks";
+import { getHargaFasilitas, createBooking } from "@/hooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loading from "../ui/loading";
 
 type FormBookingProps = {
     booking?: BookingDTO[];
@@ -19,6 +21,7 @@ type FormBookingProps = {
 
 const FormBooking: React.FC<FormBookingProps> = ({ booking, fasilitas }) => {
     const path = usePathname();
+    const router = useRouter();
     const [harga, setHarga] = useState([]);
     const [account, setAccount] = useState({
         nama: "",
@@ -33,6 +36,7 @@ const FormBooking: React.FC<FormBookingProps> = ({ booking, fasilitas }) => {
         message: "",
     });
     const [isLongTerm, setIsLongTerm] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const [pesan, setPesan] = useState({
         id_fasilitas: 0,
@@ -212,7 +216,30 @@ const FormBooking: React.FC<FormBookingProps> = ({ booking, fasilitas }) => {
 
         const { harga, ...data } = pesan;
         data.durasi = Number(data.durasi);
-        console.log(data);
+
+        const res = await createBooking(data);
+
+        if (res.status === true) {
+            toast.success("Berhasil melakukan pemesanan!", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            });
+            setTimeout(() => {
+                setLoading(true);
+                router.push("/profile");
+            }, 3000);
+        } else {
+            toast.error("Gagal melakukan pemesanan!", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            });
+        }
     };
 
     const checkWeekend = (date: string) => {
@@ -237,6 +264,11 @@ const FormBooking: React.FC<FormBookingProps> = ({ booking, fasilitas }) => {
 
     return (
         <>
+            {loading && (
+                <div className="fixed top-0 left-0 w-full h-screen flex justify-center items-center z-50 backdrop-blur-md">
+                    <Loading />
+                </div>
+            )}
             <ToastContainer />
             <div className="flex flex-col xl:gap-4 xl:p-8 lg:bg-[#FFFFFF] rounded-[15px] lg:flex-1 mt-5 xl:mt-[7px]">
                 <div className="">
@@ -277,7 +309,7 @@ const FormBooking: React.FC<FormBookingProps> = ({ booking, fasilitas }) => {
                         <h2
                             className={`${
                                 isAvailable ? "hidden" : "block"
-                            } mt-2 text-[12px] lg:text-[18px] my-1 text-red-500 font-semibold`}
+                            } mt-2 text-[12px] lg:text-[15px] my-1 text-red-500 font-semibold`}
                         >
                             Fasilitas Tidak Tersedia Pada Tanggal Ini!
                         </h2>

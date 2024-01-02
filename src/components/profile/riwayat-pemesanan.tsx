@@ -62,7 +62,7 @@ export default function RiwayatPemesanan() {
                     <div className="bg-[#07393C] w-[220px] py-[1px] mt-2"></div>
                 </div>
                 <div className="flex flex-row items-start border-b border-[#E2E7EE] mt-3 overflow-auto">
-                    <a href="#" onClick={() => toggleTab("onProcess")}>
+                    <button onClick={() => toggleTab("onProcess")}>
                         <h2
                             className={`text-[14px] font-regular w-[90px] mr-2 ${
                                 activeTab === "onProcess"
@@ -72,8 +72,8 @@ export default function RiwayatPemesanan() {
                         >
                             On Process
                         </h2>
-                    </a>
-                    <a href="#" onClick={() => toggleTab("onGoing")}>
+                    </button>
+                    <button onClick={() => toggleTab("onGoing")}>
                         <h2
                             className={`text-[14px] font-regular w-[90px] mr-2 ${
                                 activeTab === "onGoing"
@@ -83,8 +83,8 @@ export default function RiwayatPemesanan() {
                         >
                             Upload Data
                         </h2>
-                    </a>
-                    <a href="#" onClick={() => toggleTab("Review")}>
+                    </button>
+                    <button onClick={() => toggleTab("Review")}>
                         <h2
                             className={`text-[14px] font-regular w-[110px] mr-2${
                                 activeTab === "Review"
@@ -94,8 +94,8 @@ export default function RiwayatPemesanan() {
                         >
                             Review Berkas
                         </h2>
-                    </a>
-                    <a href="#" onClick={() => toggleTab("Finished")}>
+                    </button>
+                    <button onClick={() => toggleTab("Finished")}>
                         <h2
                             className={`text-[14px] font-regular mb-3 mr-5 ${
                                 activeTab === "Finished"
@@ -105,8 +105,8 @@ export default function RiwayatPemesanan() {
                         >
                             Finished
                         </h2>
-                    </a>
-                    <a href="#" onClick={() => toggleTab("Canceled")}>
+                    </button>
+                    <button onClick={() => toggleTab("Canceled")}>
                         <h2
                             className={`text-[14px] font-regular mb-3 mr-5 ${
                                 activeTab === "Canceled"
@@ -116,7 +116,7 @@ export default function RiwayatPemesanan() {
                         >
                             Canceled
                         </h2>
-                    </a>
+                    </button>
                 </div>
                 <div className="mt-5">
                     {activeTab === "onProcess" && (

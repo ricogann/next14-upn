@@ -2,11 +2,13 @@ import { getFasilitas } from "@/hooks";
 import { useEffect, useState } from "react";
 import splitData from "@/libs/fasilitas";
 import FasilitasDTO from "@/interfaces/fasilitasDTO";
+import Loading from "@/components/ui/loading";
 
 import CardFasilitas from "./card-fasilitas";
 import InfoFasilitas from "./info-fasilitas";
 
 export default function CarouselFasilitas() {
+    const [loading, setLoading] = useState(true);
     const [fasilitas, setFasilitas] = useState<FasilitasDTO[][]>([]);
     const [fasilitasMobile, setFasilitasMobile] = useState<FasilitasDTO[][]>(
         []
@@ -20,12 +22,21 @@ export default function CarouselFasilitas() {
             setFasilitas(splitData(fasilitas.data, 5));
             setFasilitasMobile(splitData(fasilitas.data, 4));
             setInfoFasilitas(fasilitas.data[0]);
+
+            if (fasilitas) {
+                setLoading(false);
+            }
         }
         initialize();
     }, []);
 
     return (
         <>
+            {loading && (
+                <div className="fixed top-0 left-0 w-full h-screen flex justify-center items-center z-50 backdrop-blur-md">
+                    <Loading />
+                </div>
+            )}
             <div className="md:hidden">
                 <div className="carousel w-full">
                     {fasilitasMobile.map((item, index) => {

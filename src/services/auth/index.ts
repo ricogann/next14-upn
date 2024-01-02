@@ -19,10 +19,10 @@ class AuthApi extends CoreAPI {
         const res = await this.fetch("/auth/login/umum", "POST", {
             json: { ...json },
         });
-
-        if (res.data.accessToken) {
-            this.setToken({ token: res.data.accessToken, expireable: true });
+        if (res.data.token) {
+            this.setToken({ token: res.data.token, expireable: true });
         }
+        return res;
     }
 
     async loginUkm(json: any) {
@@ -30,9 +30,10 @@ class AuthApi extends CoreAPI {
             json: { ...json },
         });
 
-        if (res.data.accessToken) {
-            this.setToken({ token: res.data.accessToken, expireable: true });
+        if (res.data.token) {
+            this.setToken({ token: res.data.token, expireable: true });
         }
+        return res;
     }
 
     async loginOrganisasi(json: any) {
@@ -40,9 +41,10 @@ class AuthApi extends CoreAPI {
             json: { ...json },
         });
 
-        if (res.data.accessToken) {
-            this.setToken({ token: res.data.accessToken, expireable: true });
+        if (res.data.token) {
+            this.setToken({ token: res.data.token, expireable: true });
         }
+        return res;
     }
 
     async loginAdmin(json: any) {
@@ -52,6 +54,7 @@ class AuthApi extends CoreAPI {
         if (res.data.token) {
             this.setToken({ token: res.data.token, expireable: true });
         }
+        return res;
     }
 
     async registerMahasiswa(formData: any) {

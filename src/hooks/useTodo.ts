@@ -1,4 +1,4 @@
-import { authApi } from "@/services";
+import { authApi, bookingApi } from "@/services";
 
 export const login = async (data: any) => {
     if (data.role === "mahasiswa") {
@@ -80,4 +80,8 @@ export const registration = async (data: any, role: string) => {
 
 export const loginAdmin = async (data: any) => {
     return await authApi.loginAdmin(data);
+};
+
+export const createBooking = async (data: any) => {
+    return await bookingApi.createBooking(data);
 };

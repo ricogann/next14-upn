@@ -12,6 +12,14 @@ class BookingApi extends CoreAPI {
         });
         return res;
     }
+
+    async createBooking(json: any) {
+        const res = await this.fetch("/booking/add", "POST", {
+            json: { ...json },
+            isNeedToken: true,
+        });
+        return res;
+    }
 }
 
 export default new BookingApi();

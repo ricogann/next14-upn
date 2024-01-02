@@ -4,18 +4,25 @@ import { MdOutlineWatchLater, MdPayment } from "react-icons/md";
 import { useState, useEffect } from "react";
 import LoginForm from "../auth/login";
 import Cookies from "js-cookie";
+import { parseJwt } from "@/libs/auth";
+import { useRouter } from "next/navigation";
+import Loading from "../ui/loading";
 
 type InfoFasilitasProps = {
     data: FasilitasDTO;
 };
 
 const InfoFasilitas: React.FC<InfoFasilitasProps> = ({ data }) => {
+    const router = useRouter();
     const [toggleLogin, setToggleLogin] = useState(false);
     const [isLogin, setIsLogin] = useState(false);
+    const [account, setAccount] = useState<any>();
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (Cookies.get("CERT")) {
             setIsLogin(true);
+            setAccount(parseJwt(Cookies.get("CERT")));
         } else {
             setIsLogin(false);
         }
@@ -23,6 +30,11 @@ const InfoFasilitas: React.FC<InfoFasilitasProps> = ({ data }) => {
 
     return (
         <>
+            {loading && (
+                <div className="fixed top-0 left-0 w-full h-screen flex justify-center items-center z-50 backdrop-blur-md">
+                    <Loading />
+                </div>
+            )}
             <div className="font-montserrat mt-5 bg-[#FFFFFF] rounded-[13px] border-[#07393C] border-2 shadow-xl mr-1">
                 <div className="lg:flex-row">
                     <div className="flex items-center justify-between p-5 md:p-8 xl:px-14 xl:py-10">
@@ -43,14 +55,28 @@ const InfoFasilitas: React.FC<InfoFasilitasProps> = ({ data }) => {
                             </button>
                             <button
                                 className={`w-24 bg-[#07393C] hover:bg-[#F0EDEE] hover:text-[#0A090C] text-white font-bold p-1 lg:p-2 text-[10px] border-black border-[2px] xl:text-[17px] xl:w-32 rounded-lg
-                                `}
+                                ${
+                                    data.nama === "Asrama" &&
+                                    account.role !== "mahasiswa"
+                                        ? "opacity-50 cursor-not-allowed"
+                                        : ""
+                                }`}
                                 onClick={() => {
                                     if (isLogin) {
-                                        window.location.href = `/`;
+                                        setLoading(true);
+                                        router.push(
+                                            `/booking/${data.id_fasilitas}`
+                                        );
                                     } else {
                                         setToggleLogin(!toggleLogin);
                                     }
                                 }}
+                                disabled={
+                                    data.nama === "Asrama" &&
+                                    account.role !== "mahasiswa"
+                                        ? true
+                                        : false
+                                }
                             >
                                 Book Now
                             </button>

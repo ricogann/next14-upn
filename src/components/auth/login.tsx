@@ -30,7 +30,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggle }) => {
     };
 
     const handleLogin = async () => {
-        if (npm === "" || password === "") {
+        if (password === "") {
             toast.error("Data tidak boleh kosong", {
                 position: toast.POSITION.TOP_CENTER,
             });
