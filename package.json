@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/crypto-js": "^4.2.1",
+    "crypto-js": "^4.2.0",
     "daisyui": "^4.4.24",
     "js-cookie": "^3.0.5",
     "lottie-react": "^2.4.0",

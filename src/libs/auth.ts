@@ -1,4 +1,5 @@
 import jsCookie from "js-cookie";
+import * as crypto from "crypto-js";
 
 export const getClientSideCookie = () => {
     return {
@@ -12,4 +13,19 @@ export const parseJwt = (token: any) => {
     } catch (e) {
         return null;
     }
+};
+
+export const decryptPassword = (password: string) => {
+    const bytes = crypto.AES.decrypt(
+        password,
+        process.env.NEXT_PUBLIC_SECRET_KEY ?? ""
+    );
+    return bytes.toString(crypto.enc.Utf8);
+};
+
+export const encryptPassword = (password: string) => {
+    return crypto.AES.encrypt(
+        password,
+        process.env.NEXT_PUBLIC_SECRET_KEY ?? ""
+    ).toString();
 };

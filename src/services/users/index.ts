@@ -63,6 +63,38 @@ class UsersApi extends CoreAPI {
         });
         return res;
     }
+
+    async updateUsersUmum(id: string, json: any) {
+        const res = await this.fetch(`/users/umum/${id}`, "PUT", {
+            json: { ...json },
+            isNeedToken: true,
+        });
+        return res;
+    }
+
+    async updateUsersUkm(id: string, json: any) {
+        const res = await this.fetch(`/users/ukm/${id}`, "PUT", {
+            json: { ...json },
+            isNeedToken: true,
+        });
+        return res;
+    }
+
+    async updateUsersMahasiswa(id: string, json: any) {
+        const res = await this.fetch(`/users/mahasiswa/${id}`, "PUT", {
+            json: { ...json },
+            isNeedToken: true,
+        });
+        return res;
+    }
+
+    async updateUsersOrganisasi(id: string, json: any) {
+        const res = await this.fetch(`/users/organisasi/${id}`, "PUT", {
+            json: { ...json },
+            isNeedToken: true,
+        });
+        return res;
+    }
 }
 
 export default new UsersApi();

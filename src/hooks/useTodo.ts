@@ -1,4 +1,4 @@
-import { authApi, bookingApi } from "@/services";
+import { authApi, bookingApi, usersApi } from "@/services";
 
 export const login = async (data: any) => {
     if (data.role === "mahasiswa") {
@@ -84,4 +84,20 @@ export const loginAdmin = async (data: any) => {
 
 export const createBooking = async (data: any) => {
     return await bookingApi.createBooking(data);
+};
+
+export const updateUsersUmum = async (id: string, data: any) => {
+    return await usersApi.updateUsersUmum(id, data);
+};
+
+export const updateUsersUkm = async (id: string, data: any) => {
+    return await usersApi.updateUsersUkm(id, data);
+};
+
+export const updateUsersMahasiswa = async (id: string, data: any) => {
+    return await usersApi.updateUsersMahasiswa(id, data);
+};
+
+export const updateUsersOrganisasi = async (id: string, data: any) => {
+    return await usersApi.updateUsersOrganisasi(id, data);
 };
