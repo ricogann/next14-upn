@@ -1,4 +1,10 @@
-import { fasilitasApi, campusApi, bookingApi, usersApi } from "@/services";
+import {
+    fasilitasApi,
+    campusApi,
+    bookingApi,
+    usersApi,
+    miscApi,
+} from "@/services";
 
 // fasilitas
 export const getFasilitas = async () => {
@@ -58,4 +64,9 @@ export const getUsersMahasiswa = async () => {
 
 export const getUsersOrganisasi = async () => {
     return await usersApi.getUsersOrganisasi();
+};
+
+// misc
+export const getMisc = async () => {
+    return await miscApi.getMisc();
 };
