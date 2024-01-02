@@ -86,6 +86,14 @@ export const createBooking = async (data: any) => {
     return await bookingApi.createBooking(data);
 };
 
+export const uploadBukti = async (id: string, data: any) => {
+    return await bookingApi.uploadBukti(id, data);
+};
+
+export const uploadSIK = async (id: string, data: any) => {
+    return await bookingApi.uploadSIK(id, data);
+};
+
 export const updateUsersUmum = async (id: string, data: any) => {
     return await usersApi.updateUsersUmum(id, data);
 };

@@ -20,6 +20,22 @@ class BookingApi extends CoreAPI {
         });
         return res;
     }
+
+    async uploadBukti(id: string, formData: any) {
+        const res = await this.fetch(`/booking/upload-bukti/${id}`, "PUT", {
+            body: formData,
+            isNeedToken: true,
+        });
+        return res;
+    }
+
+    async uploadSIK(id: string, formData: any) {
+        const res = await this.fetch(`/booking/upload-sik/${id}`, "PUT", {
+            body: formData,
+            isNeedToken: true,
+        });
+        return res;
+    }
 }
 
 export default new BookingApi();
