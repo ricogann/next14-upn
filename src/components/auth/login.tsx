@@ -8,9 +8,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 type LoginFormProps = {
     toggle: () => void;
+    toggleRegister: () => void;
 };
 
-const LoginForm: React.FC<LoginFormProps> = ({ toggle }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ toggle, toggleRegister }) => {
     const [role, setRole] = useState("mahasiswa");
     const [npm, setNpm] = useState("");
     const [email, setEmail] = useState("");
@@ -140,7 +141,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggle }) => {
                     <div className="text-center mb-5">
                         <h1 className="text-[16x] font-bold mt-5 md:mt-5 xl:text-[18px]">
                             Belum punya akun?{" "}
-                            <span className="text-[#07393C] cursor-pointer">
+                            <span
+                                className="text-[#07393C] cursor-pointer"
+                                onClick={() => {
+                                    toggle();
+                                    toggleRegister();
+                                }}
+                            >
                                 Daftar
                             </span>
                         </h1>

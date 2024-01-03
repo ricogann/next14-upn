@@ -10,9 +10,10 @@ import { getFakultas, getProdi, getTahunAjaran, registration } from "@/hooks";
 
 type RegisterFormProps = {
     toggle: () => void;
+    toggleLogin: () => void;
 };
 
-const RegisterForm: React.FC<RegisterFormProps> = ({ toggle }) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ toggle, toggleLogin }) => {
     const [role, setRole] = useState("mahasiswa");
     const [fakultas, setFakultas] = useState([]);
     const [prodi, setProdi] = useState([]);
@@ -107,7 +108,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle }) => {
     return (
         <>
             <ToastContainer />
-            <div className="fixed z-50 top-0 flex items-center justify-center backdrop-blur-xl h-screen w-screen">
+            <div className="fixed z-50 top-0 left-0 flex items-center justify-center backdrop-blur-xl h-screen w-screen">
                 <div className="p-6 h-[500px] overflow-auto text-black relative bg-white rounded-xl border-2 border-black shadow-xl">
                     <div className="flex justify-end" onClick={toggle}>
                         <AiOutlineClose className="text-2xl cursor-pointer" />
@@ -346,7 +347,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle }) => {
                     <div className="text-center">
                         <h1 className="text-[16px] font-bold mt-10">
                             Sudah punya akun?{" "}
-                            <span className="text-[#07393C] cursor-pointer">
+                            <span
+                                className="text-[#07393C] cursor-pointer"
+                                onClick={() => {
+                                    toggle();
+                                    toggleLogin();
+                                }}
+                            >
                                 Login
                             </span>
                         </h1>

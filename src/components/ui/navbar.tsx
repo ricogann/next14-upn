@@ -178,11 +178,15 @@ export default function Navbar() {
                 </div>
             </div>
             <div className={`${toggleLogin ? "" : "hidden"}`}>
-                <LoginForm toggle={() => setToggleLogin(!toggleLogin)} />
+                <LoginForm
+                    toggle={() => setToggleLogin(!toggleLogin)}
+                    toggleRegister={() => setToggleRegister(!toggleRegister)}
+                />
             </div>
             <div className={`${toggleRegister ? "" : "hidden"}`}>
                 <RegisterForm
                     toggle={() => setToggleRegister(!toggleRegister)}
+                    toggleLogin={() => setToggleLogin(!toggleLogin)}
                 />
             </div>
         </>

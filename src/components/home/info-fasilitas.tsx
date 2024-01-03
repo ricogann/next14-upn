@@ -3,6 +3,7 @@ import { BsFillPinMapFill } from "react-icons/bs";
 import { MdOutlineWatchLater, MdPayment } from "react-icons/md";
 import { useState, useEffect } from "react";
 import LoginForm from "../auth/login";
+import RegisterForm from "../auth/register";
 import Cookies from "js-cookie";
 import { parseJwt } from "@/libs/auth";
 import { useRouter } from "next/navigation";
@@ -15,6 +16,7 @@ type InfoFasilitasProps = {
 const InfoFasilitas: React.FC<InfoFasilitasProps> = ({ data }) => {
     const router = useRouter();
     const [toggleLogin, setToggleLogin] = useState(false);
+    const [toggleRegister, setToggleRegister] = useState(false);
     const [isLogin, setIsLogin] = useState(false);
     const [account, setAccount] = useState<any>();
     const [loading, setLoading] = useState(false);
@@ -120,7 +122,16 @@ const InfoFasilitas: React.FC<InfoFasilitasProps> = ({ data }) => {
                 </div>
             </div>
             <div className={`${toggleLogin ? "" : "hidden"}`}>
-                <LoginForm toggle={() => setToggleLogin(!toggleLogin)} />
+                <LoginForm
+                    toggle={() => setToggleLogin(!toggleLogin)}
+                    toggleRegister={() => setToggleRegister(!toggleRegister)}
+                />
+            </div>
+            <div className={`${toggleRegister ? "" : "hidden"}`}>
+                <RegisterForm
+                    toggle={() => setToggleRegister(!toggleRegister)}
+                    toggleLogin={() => setToggleLogin(!toggleLogin)}
+                />
             </div>
         </>
     );
