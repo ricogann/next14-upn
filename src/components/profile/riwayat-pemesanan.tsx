@@ -86,7 +86,7 @@ export default function RiwayatPemesanan() {
                     </button>
                     <button onClick={() => toggleTab("Review")}>
                         <h2
-                            className={`text-[14px] font-regular w-[110px] mr-2${
+                            className={`text-[14px] font-regular w-[110px] mr-3${
                                 activeTab === "Review"
                                     ? "border-b-2 border-[#FFA101] font-bold"
                                     : ""

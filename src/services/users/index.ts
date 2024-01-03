@@ -95,6 +95,13 @@ class UsersApi extends CoreAPI {
         });
         return res;
     }
+
+    async checkExpiredMahasiswa(id: number) {
+        const res = await this.fetch(`/users/mahasiswa/check/${id}`, "POST", {
+            isNeedToken: true,
+        });
+        return res;
+    }
 }
 
 export default new UsersApi();

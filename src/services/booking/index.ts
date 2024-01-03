@@ -36,6 +36,18 @@ class BookingApi extends CoreAPI {
         });
         return res;
     }
+
+    async addMahasiswaToKamar(id: number, json: any) {
+        try {
+            const res = await this.fetch(`/booking/kamarAsrama/${id}`, "PUT", {
+                json: { ...json },
+                isNeedToken: true,
+            });
+            return res;
+        } catch (error) {
+            return error;
+        }
+    }
 }
 
 export default new BookingApi();

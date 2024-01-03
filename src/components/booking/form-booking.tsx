@@ -9,7 +9,12 @@ import BookingDTO from "@/interfaces/bookingDTO";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
-import { getHargaFasilitas, createBooking } from "@/hooks";
+import {
+    getHargaFasilitas,
+    createBooking,
+    checkExpiredMahasiswa,
+    addMahasiswaToKamar,
+} from "@/hooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loading from "../ui/loading";
@@ -197,8 +202,49 @@ const FormBooking: React.FC<FormBookingProps> = ({ booking, fasilitas }) => {
 
     const handleSubmit = async () => {
         if (isLongTerm) {
+            if (pesan.keterangan === "") {
+                toast.error("Mohon isi semua form!", {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    draggable: true,
+                });
+                return;
+            }
             pesan.tanggal_pemesanan = new Date().toISOString().split("T")[0];
             pesan.total_harga = pesan.harga * 2 + 250000;
+            const res = await checkExpiredMahasiswa(pesan.id_account);
+            if (res.status !== true) {
+                toast.error(
+                    "Lebih dari semester 3 tidak bisa melakukan pemesanan!",
+                    {
+                        position: "top-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        draggable: true,
+                    }
+                );
+                return;
+            }
+            const kamar = await addMahasiswaToKamar(pesan.id_harga, {
+                idAccount: pesan.id_account,
+            });
+            if (kamar.status !== true || kamar === undefined) {
+                toast.error("Anda telah melakukan pemesanan!", {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    draggable: true,
+                });
+                return;
+            }
+
+            const { harga, ...data } = pesan;
+            const booking = await createBooking(data);
+            return;
         } else {
             pesan.total_harga = pesan.harga * pesan.durasi * durationHours();
         }

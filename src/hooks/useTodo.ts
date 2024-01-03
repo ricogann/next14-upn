@@ -109,3 +109,11 @@ export const updateUsersMahasiswa = async (id: string, data: any) => {
 export const updateUsersOrganisasi = async (id: string, data: any) => {
     return await usersApi.updateUsersOrganisasi(id, data);
 };
+
+export const checkExpiredMahasiswa = async (id: number) => {
+    return await usersApi.checkExpiredMahasiswa(id);
+};
+
+export const addMahasiswaToKamar = async (id: number, data: any) => {
+    return await bookingApi.addMahasiswaToKamar(id, data);
+};
