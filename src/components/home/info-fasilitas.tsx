@@ -59,6 +59,7 @@ const InfoFasilitas: React.FC<InfoFasilitasProps> = ({ data }) => {
                                 className={`w-24 bg-[#07393C] hover:bg-[#F0EDEE] hover:text-[#0A090C] text-white font-bold p-1 lg:p-2 text-[10px] border-black border-[2px] xl:text-[17px] xl:w-32 rounded-lg
                                 ${
                                     data.nama === "Asrama" &&
+                                    account &&
                                     account.role !== "mahasiswa"
                                         ? "opacity-50 cursor-not-allowed"
                                         : ""
@@ -75,6 +76,7 @@ const InfoFasilitas: React.FC<InfoFasilitasProps> = ({ data }) => {
                                 }}
                                 disabled={
                                     data.nama === "Asrama" &&
+                                    account &&
                                     account.role !== "mahasiswa"
                                         ? true
                                         : false

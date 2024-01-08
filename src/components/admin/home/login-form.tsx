@@ -1,21 +1,55 @@
 import { useState } from "react";
 import { loginAdmin } from "@/hooks";
+import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function LoginForm() {
+    const router = useRouter();
     const [account, setAccount] = useState({
         username_admin: "",
         password_admin: "",
     });
-    const handleSubmit = async (e: any) => {
+    const handleSubmit = async () => {
+        if (account.username_admin === "" || account.password_admin === "") {
+            toast.error("Data tidak boleh kosong", {
+                position: toast.POSITION.TOP_CENTER,
+            });
+            return;
+        }
         const res = await loginAdmin(account);
-        console.log(res);
+
+        if (res.status === true) {
+            toast.success("Login berhasil", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            });
+            router.push("/admin/dashboard");
+        } else {
+            toast.error(res.error, {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            });
+        }
     };
     const handleChange = (e: any) => {
         const { name, value } = e.target;
         setAccount({ ...account, [name]: value });
     };
+    const enterPressed = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            handleSubmit();
+        }
+    };
     return (
         <>
+            <ToastContainer />
             <div className="border-2 p-8 rounded-xl border-black bg-white text-black">
                 <div className="flex flex-col items-start justify-center mb-7">
                     <h1 className=" font-semibold mb-5 mt-3 text-[35px] ">
@@ -32,6 +66,7 @@ export default function LoginForm() {
                                     type="text"
                                     className="border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px] md:w-[500px] md:p-3 lg:p-2 bg-white"
                                     onChange={handleChange}
+                                    onKeyDown={enterPressed}
                                 />
                             </div>
                             <div className="">
@@ -43,6 +78,7 @@ export default function LoginForm() {
                                     type="password"
                                     className="border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px] md:w-[500px] md:p-3 lg:p-2 bg-white"
                                     onChange={handleChange}
+                                    onKeyDown={enterPressed}
                                 />
                             </div>
                         </div>

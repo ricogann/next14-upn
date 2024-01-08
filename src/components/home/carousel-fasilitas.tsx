@@ -33,7 +33,7 @@ export default function CarouselFasilitas() {
     return (
         <>
             {loading && (
-                <div className="fixed top-0 left-0 w-full h-screen flex justify-center items-center z-50 backdrop-blur-md">
+                <div className="w-full h-[500px] flex justify-center items-center z-50 backdrop-blur-md">
                     <Loading />
                 </div>
             )}

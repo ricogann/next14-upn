@@ -48,13 +48,17 @@ class AuthApi extends CoreAPI {
     }
 
     async loginAdmin(json: any) {
-        const res = await this.fetch("/auth/login/admin", "POST", {
-            json: { ...json },
-        });
-        if (res.data.token) {
-            this.setToken({ token: res.data.token, expireable: true });
+        try {
+            const res = await this.fetch("/auth/login/admin", "POST", {
+                json: { ...json },
+            });
+            if (res.data.token) {
+                this.setToken({ token: res.data.token, expireable: true });
+            }
+            return res;
+        } catch (error) {
+            return error;
         }
-        return res;
     }
 
     async registerMahasiswa(formData: any) {
