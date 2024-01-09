@@ -1,13 +1,27 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Error from "@/components/ui/error-tampilan";
 import Sidebar from "@/components/ui/sidebar";
 import TabFasilitas from "@/components/admin/fasilitas/tab-fasilitas";
 import TabHarga from "@/components/admin/fasilitas/tab-harga";
+import { getAllHargaFasilitas, getFasilitas } from "@/hooks";
 
 export default function FasilitasPage() {
     const [activeTab, setActiveTab] = useState("fasilitas");
+    const [fasilitas, setFasilitas] = useState([]);
+    const [harga, setHarga] = useState([]);
+
+    useEffect(() => {
+        async function initialize() {
+            const fasilitas = await getFasilitas();
+            const harga = await getAllHargaFasilitas();
+            setFasilitas(fasilitas.data);
+            setHarga(harga.data);
+        }
+
+        initialize();
+    }, []);
 
     const toggleTab = (tab: string) => {
         setActiveTab(tab);
@@ -20,7 +34,9 @@ export default function FasilitasPage() {
                 </div>
 
                 <div className="hidden xl:flex">
-                    <Sidebar />
+                    <div className="min-h-screen">
+                        <Sidebar />
+                    </div>
 
                     <div className="hidden xl:block bg-[#2C666E] min-h-screen flex-1 overflow-hidden">
                         <div className="p-10">
@@ -101,8 +117,10 @@ export default function FasilitasPage() {
                             <div className="">
                                 {
                                     {
-                                        fasilitas: <TabFasilitas />,
-                                        harga: <TabHarga />,
+                                        fasilitas: (
+                                            <TabFasilitas data={fasilitas} />
+                                        ),
+                                        harga: <TabHarga data={harga} />,
                                     }[activeTab]
                                 }
                             </div>
