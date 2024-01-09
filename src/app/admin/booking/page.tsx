@@ -1,25 +1,95 @@
 "use client";
 import { useState, useEffect } from "react";
-
 import Error from "@/components/ui/error-tampilan";
 import Sidebar from "@/components/ui/sidebar";
-
-import { getBooking } from "@/hooks";
+import Loading from "@/components/ui/loading";
+import Pagination from "@/components/ui/pagination";
+import { getBooking, updateStatusBooking } from "@/hooks";
+import splitData from "@/libs";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function BookingPage() {
-    const [bookings, setBookings] = useState([]);
+    const [bookings, setBookings] = useState<any[]>([]);
     const [isDecline, setIsDecline] = useState(false);
+    const [booking, setBooking] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(0);
+    const [id, setId] = useState(0);
+    const [keterangan, setKeterangan] = useState("");
 
     useEffect(() => {
         async function initialize() {
             const booking = await getBooking();
+            const split = splitData(booking.data, 6);
             setBookings(booking.data);
+            setBooking(split);
+            setLoading(false);
         }
         initialize();
     }, []);
 
+    const handleTextArea = (e: any) => {
+        setKeterangan(e.target.value);
+    };
+
+    const handleSubmit = async (
+        id: number,
+        status: string,
+        keterangan: string | null
+    ) => {
+        if (isDecline && keterangan === "") {
+            toast.error("Keterangan tolak harus di isi!", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            });
+            return;
+        }
+        const data = {
+            status: status,
+            keterangan_tolak: keterangan,
+        };
+
+        const res = await updateStatusBooking(id, data);
+
+        if (res.status === true) {
+            toast.success("Berhasil mengubah status booking", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            });
+            setIsDecline(false);
+            window.location.reload();
+        } else {
+            toast.error(res.error, {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            });
+        }
+    };
+
+    const enterPressed = (
+        e: React.KeyboardEvent<HTMLTextAreaElement>,
+        id: number,
+        status: string,
+        keterangan: string | null
+    ) => {
+        if (e.key === "Enter") {
+            handleSubmit(id, status, keterangan);
+        }
+    };
+
     return (
         <>
+            <ToastContainer />
             <div className="">
                 <div className="xl:hidden">
                     <Error />
@@ -84,148 +154,261 @@ export default function BookingPage() {
                                     </h1>
                                 </div>
                             </div>
-                            <div className="bg-white divide-y divide-gray-200 text-black">
-                                {bookings.map((data, index) => (
-                                    <div className="flex" key={index}>
-                                        <div className="px-6 py-4 whitespace-no-wrap text-[15px] w-[70px]">
-                                            {data.id_pemesanan}
-                                        </div>
-                                        <div className="px-6 py-4 whitespace-no-wrap w-[130px] text-[15px] text-center">
-                                            {data.Fasilitas &&
-                                                data.Fasilitas.nama}
-                                        </div>
-                                        <div className="px-6 py-4 break-all w-[200px] text-[15px] text-center">
-                                            {data.Account.Mahasiswa.length > 0
-                                                ? data.Account.Mahasiswa[0].nama
-                                                : data.Account.UKM.length > 0
-                                                ? data.Account.UKM[0].nama_ukm
-                                                : data.Account.Umum.length > 0
-                                                ? data.Account.Umum[0].nama
-                                                : data.Account.Organisasi[0]
-                                                      .nama_organisasi}
-                                        </div>
-                                        <div className="px-6 py-4 break-all text-center w-[150px] text-[15px]">
-                                            {new Date(
-                                                data.tanggal_pemesanan
-                                            ).toLocaleDateString("id-ID", {
-                                                weekday: "long",
-                                                day: "numeric",
-                                                month: "long",
-                                                year: "numeric",
-                                            })}
-                                        </div>
-                                        <div className="px-6 py-4 break-all text-center w-[150px]">
-                                            {new Date(
-                                                new Date(
+                            <div className="bg-white rounded-b-lg divide-y divide-gray-200 text-black">
+                                {booking.length > 0 ? (
+                                    booking[page].map((data, index) => (
+                                        <div className="flex" key={index}>
+                                            <div className="px-6 py-4 whitespace-no-wrap text-[15px] w-[70px]">
+                                                {data.id_pemesanan}
+                                            </div>
+                                            <div className="px-6 py-4 whitespace-no-wrap w-[130px] text-[15px] text-center">
+                                                {data.Fasilitas &&
+                                                    data.Fasilitas.nama}
+                                            </div>
+                                            <div className="px-6 py-4 break-all w-[200px] text-[15px] text-center">
+                                                {data.Account.Mahasiswa.length >
+                                                0
+                                                    ? data.Account.Mahasiswa[0]
+                                                          .nama
+                                                    : data.Account.UKM.length >
+                                                      0
+                                                    ? data.Account.UKM[0]
+                                                          .nama_ukm
+                                                    : data.Account.Umum.length >
+                                                      0
+                                                    ? data.Account.Umum[0].nama
+                                                    : data.Account.Organisasi[0]
+                                                          .nama_organisasi}
+                                            </div>
+                                            <div className="px-6 py-4 break-all text-center w-[150px] text-[15px]">
+                                                {new Date(
                                                     data.tanggal_pemesanan
-                                                ).getTime() +
-                                                    data.durasi *
-                                                        24 *
-                                                        60 *
-                                                        60 *
-                                                        1000
-                                            ).toLocaleDateString("id-ID", {
-                                                weekday: "long",
-                                                day: "numeric",
-                                                month: "long",
-                                                year: "numeric",
-                                            })}
-                                        </div>
-                                        <div className="px-6 py-4 break-all w-[137px] text-[15px] text-center">
-                                            {data.status}
-                                        </div>
-                                        <div className="px-6 py-4 break-all w-[140px] text-[15px] text-center">
-                                            Rp
-                                            {data.total_harga
-                                                .toString()
-                                                .replace(
-                                                    /\B(?=(\d{3})+(?!\d))/g,
-                                                    "."
-                                                )}
-                                        </div>
-
-                                        <div className="px-6 py-4 whitespace-no-wrap flex items-center justify-center w-[238px]">
-                                            {data.bukti_pembayaran !== null ? (
-                                                <button
-                                                    className={`${
-                                                        data.status ===
-                                                        "Menunggu Konfirmasi"
-                                                            ? "hidden"
-                                                            : "block"
-                                                    } bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md mr-2 text-[10px]`}
-                                                >
-                                                    Bukti Pembayaran
-                                                </button>
-                                            ) : (
-                                                <a
-                                                    href={`https://api.ricogann.com/assets/${data.SIK}`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md mr-2 text-[10px]"
-                                                >
-                                                    Open PDF
-                                                </a>
-                                            )}
+                                                ).toLocaleDateString("id-ID", {
+                                                    weekday: "long",
+                                                    day: "numeric",
+                                                    month: "long",
+                                                    year: "numeric",
+                                                })}
+                                            </div>
+                                            <div className="px-6 py-4 break-all text-center w-[150px]">
+                                                {new Date(
+                                                    new Date(
+                                                        data.tanggal_pemesanan
+                                                    ).getTime() +
+                                                        data.durasi *
+                                                            24 *
+                                                            60 *
+                                                            60 *
+                                                            1000
+                                                ).toLocaleDateString("id-ID", {
+                                                    weekday: "long",
+                                                    day: "numeric",
+                                                    month: "long",
+                                                    year: "numeric",
+                                                })}
+                                            </div>
+                                            <div className="px-6 py-4 break-all w-[137px] text-[15px] text-center">
+                                                {data.status}
+                                            </div>
+                                            <div className="px-6 py-4 break-all w-[140px] text-[15px] text-center">
+                                                Rp
+                                                {data.total_harga
+                                                    .toString()
+                                                    .replace(
+                                                        /\B(?=(\d{3})+(?!\d))/g,
+                                                        "."
+                                                    )}
+                                            </div>
 
                                             <div
-                                                className={`${
-                                                    data.status ===
-                                                        "Menunggu Konfirmasi" ||
-                                                    data.status ===
-                                                        "Review Berkas"
-                                                        ? "flex flex-col gap-2"
-                                                        : "hidden"
-                                                }`}
+                                                className={`px-6 py-4 whitespace-no-wrap flex items-center justify-center w-[238px]`}
                                             >
-                                                <button
-                                                    className={`} bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full text-[13px]`}
-                                                >
-                                                    Decline
-                                                </button>
-                                                <button
-                                                    className={`${
-                                                        data.status ===
-                                                            "Review Berkas" ||
-                                                        data.status ===
-                                                            "Menunggu Konfirmasi"
-                                                            ? "block"
-                                                            : "hidden"
-                                                    } bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full text-[13px]`}
-                                                >
-                                                    Approve
-                                                </button>
                                                 <div
                                                     className={`${
-                                                        isDecline
-                                                            ? "block"
+                                                        isDecline &&
+                                                        id === data.id_pemesanan
+                                                            ? "hidden"
+                                                            : ""
+                                                    }`}
+                                                >
+                                                    {data.bukti_pembayaran !==
+                                                    null ? (
+                                                        <button
+                                                            className={`${
+                                                                data.status ===
+                                                                "Menunggu Konfirmasi"
+                                                                    ? "hidden"
+                                                                    : "block"
+                                                            } bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md mr-2 text-[10px]`}
+                                                            onClick={() => {
+                                                                window.open(
+                                                                    `${process.env.NEXT_PUBLIC_API_URL}/assets/${data.bukti_pembayaran}`,
+                                                                    "_blank"
+                                                                );
+                                                            }}
+                                                        >
+                                                            Bukti Pembayaran
+                                                        </button>
+                                                    ) : (
+                                                        <button
+                                                            className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md mr-2 text-[10px] ${
+                                                                data.status ===
+                                                                    "Dibatalkan" ||
+                                                                data.status ===
+                                                                    "Menunggu Berkas" ||
+                                                                data.status ===
+                                                                    "Menunggu Konfirmasi"
+                                                                    ? "hidden"
+                                                                    : "block"
+                                                            }`}
+                                                            onClick={() => {
+                                                                window.open(
+                                                                    `${process.env.NEXT_PUBLIC_API_URL}/assets/${data.SIK}`,
+                                                                    "_blank"
+                                                                );
+                                                            }}
+                                                        >
+                                                            Open PDF
+                                                        </button>
+                                                    )}
+                                                </div>
+
+                                                <div
+                                                    className={`${
+                                                        data.status ===
+                                                            "Menunggu Konfirmasi" ||
+                                                        data.status ===
+                                                            "Review Berkas"
+                                                            ? "flex flex-col gap-2"
                                                             : "hidden"
                                                     }`}
                                                 >
-                                                    <input
-                                                        type="text"
-                                                        name={`keterangan_tolak`}
-                                                        className={` bg-white border-2 rounded-md w-full px-2 py-[2px] border-black`}
-                                                    />
                                                     <div
-                                                        className={` flex justify-center gap-3`}
+                                                        className={`${
+                                                            isDecline &&
+                                                            id ===
+                                                                data.id_pemesanan
+                                                                ? "hidden"
+                                                                : "block"
+                                                        } flex flex-col gap-2
+                                                    `}
                                                     >
                                                         <button
-                                                            className={`bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md text-[13px]`}
+                                                            className={`bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full text-[13px]`}
+                                                            onClick={() => {
+                                                                setIsDecline(
+                                                                    true
+                                                                );
+                                                                setId(
+                                                                    data.id_pemesanan
+                                                                );
+                                                            }}
                                                         >
-                                                            Cancel
+                                                            Decline
                                                         </button>
                                                         <button
-                                                            className={`bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md text-[13px]`}
+                                                            className={`${
+                                                                data.status ===
+                                                                    "Review Berkas" ||
+                                                                data.status ===
+                                                                    "Menunggu Konfirmasi"
+                                                                    ? "block"
+                                                                    : "hidden"
+                                                            } bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full text-[13px]`}
+                                                            onClick={() =>
+                                                                handleSubmit(
+                                                                    data.id_pemesanan,
+                                                                    data.status ===
+                                                                        "Review Berkas"
+                                                                        ? "Dikonfirmasi"
+                                                                        : "Menunggu Berkas",
+                                                                    keterangan
+                                                                )
+                                                            }
                                                         >
-                                                            Save
+                                                            Approve
                                                         </button>
+                                                    </div>
+                                                    <div
+                                                        className={`${
+                                                            isDecline &&
+                                                            id ===
+                                                                data.id_pemesanan
+                                                                ? "block"
+                                                                : "hidden"
+                                                        }`}
+                                                    >
+                                                        <textarea
+                                                            name={`keterangan_tolak`}
+                                                            className={` bg-white border-2 rounded-md w-full px-2 py-[2px] border-black`}
+                                                            onChange={
+                                                                handleTextArea
+                                                            }
+                                                            onKeyDown={(e) =>
+                                                                enterPressed(
+                                                                    e,
+                                                                    data.id_pemesanan,
+                                                                    "Dibatalkan",
+                                                                    keterangan
+                                                                )
+                                                            }
+                                                        />
+                                                        <div
+                                                            className={`mt-2 flex justify-center gap-3`}
+                                                        >
+                                                            <button
+                                                                className={`bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md text-[13px]`}
+                                                                onClick={() => {
+                                                                    setIsDecline(
+                                                                        false
+                                                                    );
+                                                                }}
+                                                            >
+                                                                Cancel
+                                                            </button>
+                                                            <button
+                                                                className={`bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md text-[13px]`}
+                                                                onClick={() =>
+                                                                    handleSubmit(
+                                                                        data.id_pemesanan,
+                                                                        "Dibatalkan",
+                                                                        keterangan
+                                                                    )
+                                                                }
+                                                            >
+                                                                Submit
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    ))
+                                ) : (
+                                    <div className="">
+                                        <div
+                                            className={`fixed w-full mt-10 left-[55%] ${
+                                                loading ? "" : "hidden"
+                                            }`}
+                                        >
+                                            <Loading />
+                                        </div>
+                                        <div
+                                            className={`text-white text-2xl fixed w-full left-[55%] ${
+                                                loading ? "hidden" : ""
+                                            }`}
+                                        >
+                                            Data Kosong
+                                        </div>
                                     </div>
-                                ))}
+                                )}
                             </div>
+                            <Pagination
+                                totalPages={booking.length}
+                                currentPage={page + 1}
+                                handlePage={setPage}
+                                totalData={bookings.length}
+                            />
                         </div>
                     </div>
                 </div>
