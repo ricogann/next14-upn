@@ -47,7 +47,9 @@ export default function UsersPage() {
             </div>
 
             <div className="hidden xl:flex">
-                <Sidebar />
+                <div className="min-h-screen">
+                    <Sidebar />
+                </div>
 
                 <div className="hidden xl:block bg-[#2C666E] min-h-screen flex-1 overflow-hidden">
                     <div className="p-10">

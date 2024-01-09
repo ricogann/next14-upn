@@ -65,21 +65,19 @@ export default function TabFasilitas({ data }) {
                             ))
                         ) : (
                             <div className="">
-                                <div className="">
-                                    <div
-                                        className={`fixed w-full left-[55%] ${
-                                            loading ? "" : "hidden"
-                                        }`}
-                                    >
-                                        <Loading />
-                                    </div>
-                                    <div
-                                        className={`text-white text-2xl fixed w-full left-[55%] ${
-                                            loading ? "hidden" : ""
-                                        }`}
-                                    >
-                                        Data Kosong
-                                    </div>
+                                <div
+                                    className={`fixed w-full left-[55%] ${
+                                        loading ? "" : "hidden"
+                                    }`}
+                                >
+                                    <Loading />
+                                </div>
+                                <div
+                                    className={`text-white text-2xl fixed w-full left-[55%] ${
+                                        loading ? "hidden" : ""
+                                    }`}
+                                >
+                                    Data Kosong
                                 </div>
                             </div>
                         )}
