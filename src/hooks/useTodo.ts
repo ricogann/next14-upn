@@ -1,4 +1,4 @@
-import { authApi, bookingApi, usersApi } from "@/services";
+import { authApi, bookingApi, usersApi, miscApi } from "@/services";
 
 export const login = async (data: any) => {
     if (data.role === "mahasiswa") {
@@ -124,4 +124,21 @@ export const updateStatusBooking = async (id: number, data: any) => {
 
 export const updateStatusAccount = async (id: number, data: any) => {
     return await usersApi.updateStatusAccount(id, data);
+};
+
+export const updateDataMisc = async (id: number, data: any) => {
+    const formData = new FormData();
+    formData.append("nama_instansi", data.nama_instansi);
+    formData.append("no_hp", data.no_hp);
+    formData.append("email", data.email);
+    formData.append("instagram", data.instagram);
+    formData.append("laman_web", data.laman_web);
+    formData.append("nama_pic", data.nama_pic);
+    formData.append("nip_pic", data.nip_pic);
+    formData.append("logo_instansi", data.logo_instansi as Blob);
+    formData.append("tanda_tangan", data.tanda_tangan as Blob);
+    formData.append("logo_instansi_old", data.logo_instansi_old);
+    formData.append("tanda_tangan_old", data.tanda_tangan_old);
+
+    return await miscApi.updateDataMisc(id, formData);
 };
