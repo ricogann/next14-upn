@@ -117,3 +117,11 @@ export const checkExpiredMahasiswa = async (id: number) => {
 export const addMahasiswaToKamar = async (id: number, data: any) => {
     return await bookingApi.addMahasiswaToKamar(id, data);
 };
+
+export const updateStatusBooking = async (id: number, data: any) => {
+    return await bookingApi.updateStatusBooking(id, data);
+};
+
+export const updateStatusAccount = async (id: number, data: any) => {
+    return await usersApi.updateStatusAccount(id, data);
+};

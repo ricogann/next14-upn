@@ -1,4 +1,5 @@
 export default interface FasilitasDTO {
+    id_pemesanan: number;
     id_fasilitas: number;
     nama: string;
     deskripsi: string;

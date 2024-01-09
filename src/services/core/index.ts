@@ -18,7 +18,8 @@ interface FetchOptions {
 }
 
 export class CoreAPI {
-    private baseUrl = "https://api.ricogann.com";
+    private baseUrl =
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
     setToken = ({
         token,

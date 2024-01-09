@@ -48,6 +48,14 @@ class BookingApi extends CoreAPI {
             return error;
         }
     }
+
+    async updateStatusBooking(id: number, json: any) {
+        const res = await this.fetch(`/booking/verifikasi/${id}`, "PUT", {
+            json: { ...json },
+            isNeedToken: true,
+        });
+        return res;
+    }
 }
 
 export default new BookingApi();

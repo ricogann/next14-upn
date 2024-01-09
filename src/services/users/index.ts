@@ -102,6 +102,14 @@ class UsersApi extends CoreAPI {
         });
         return res;
     }
+
+    async updateStatusAccount(id: number, json: any) {
+        const res = await this.fetch(`/users/account/verifikasi/${id}`, "PUT", {
+            json: { ...json },
+            isNeedToken: true,
+        });
+        return res;
+    }
 }
 
 export default new UsersApi();

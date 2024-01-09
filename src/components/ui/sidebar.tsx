@@ -28,11 +28,10 @@ export default function Sidebar() {
             src: MdMiscellaneousServices,
             link: "/admin/miscellaneous",
         },
-        { title: "Logout", src: BiLogOut, link: "/logout" },
     ];
     return (
         <>
-            <div className="flex ">
+            <div className="flex h-full">
                 <div
                     className={` ${
                         open ? "w-56" : "w-20 "
