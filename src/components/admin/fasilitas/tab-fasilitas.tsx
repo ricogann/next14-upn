@@ -1,19 +1,48 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Pagination from "@/components/ui/pagination";
 import Loading from "@/components/ui/loading";
 import splitData from "@/libs";
+import { deleteFasilitas } from "@/hooks";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function TabFasilitas({ data }) {
     const [page, setPage] = useState(0);
     const [dataShow, setDataShow] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         setDataShow(splitData(data, 3));
         setLoading(false);
     }, [data]);
+
+    const handleDelete = async (id: string) => {
+        const res = await deleteFasilitas(id);
+
+        if (res.status === true) {
+            toast.success(res.message, {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            });
+            window.location.reload();
+        } else {
+            toast.error(res.message, {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            });
+        }
+    };
     return (
         <>
+            <ToastContainer />
             <div className="flex flex-wrap overflow-hidden rounded-lg shadow-lg">
                 <div className="min-w-full rounded-lg overflow-hidden">
                     <div className="flex text-white">
@@ -54,10 +83,22 @@ export default function TabFasilitas({ data }) {
                                         {data.alamat}
                                     </div>
                                     <div className="px-6 py-4 whitespace-no-wrap flex items-center justify-center w-[200px]">
-                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mr-2">
+                                        <button
+                                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mr-2"
+                                            onClick={() =>
+                                                router.push(
+                                                    `/admin/fasilitas/${data.id_fasilitas}`
+                                                )
+                                            }
+                                        >
                                             Detail
                                         </button>
-                                        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">
+                                        <button
+                                            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
+                                            onClick={() =>
+                                                handleDelete(data.id_fasilitas)
+                                            }
+                                        >
                                             Delete
                                         </button>
                                     </div>

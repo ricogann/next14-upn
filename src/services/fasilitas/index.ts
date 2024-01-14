@@ -31,7 +31,7 @@ class FasilitasApi extends CoreAPI {
     }
 
     async addFasilitas(formData: any) {
-        const res = await this.fetch("/fasilitas", "POST", {
+        const res = await this.fetch("/fasilitas/add", "POST", {
             body: formData,
             isNeedToken: true,
         });
@@ -40,7 +40,7 @@ class FasilitasApi extends CoreAPI {
     }
 
     async deleteFasilitas(id: string) {
-        const res = await this.fetch(`/fasilitas/${id}`, "DELETE", {
+        const res = await this.fetch(`/fasilitas/delete/${id}`, "DELETE", {
             isNeedToken: true,
         });
 

@@ -26,6 +26,7 @@ export default function FasilitasPage() {
     const toggleTab = (tab: string) => {
         setActiveTab(tab);
     };
+
     return (
         <>
             <div className="xl:hidden">
@@ -38,7 +39,7 @@ export default function FasilitasPage() {
                 </div>
 
                 <div className="hidden xl:block bg-[#2C666E] min-h-screen flex-1 overflow-hidden">
-                    <div className="p-10">
+                    <div className="p-10 text-white">
                         <div className="flex flex-col items-start justify-center">
                             <h1 className="text-[45px] font-bold">
                                 {

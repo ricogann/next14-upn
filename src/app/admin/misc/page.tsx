@@ -30,7 +30,7 @@ export default function MiscPage() {
 
                 <div className="hidden xl:block bg-[#2C666E] min-h-screen flex-1 overflow-hidden">
                     <div className="p-10">
-                        <div className="flex flex-col items-start justify-center">
+                        <div className="flex flex-col items-start justify-center text-white">
                             <h1 className="text-[45px] font-bold">
                                 Miscellanous
                             </h1>

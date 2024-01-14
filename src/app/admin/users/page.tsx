@@ -52,7 +52,7 @@ export default function UsersPage() {
                 </div>
 
                 <div className="hidden xl:block bg-[#2C666E] min-h-screen flex-1 overflow-hidden">
-                    <div className="p-10">
+                    <div className="p-10 text-white">
                         <div className="flex flex-col items-start justify-center">
                             <h1 className="text-[45px] font-bold">Users</h1>
                             <h4 className="text-[15px] font-regular mb-5 text-dark-whiteText">

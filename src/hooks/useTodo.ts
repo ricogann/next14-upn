@@ -170,3 +170,27 @@ export const updateFasilitas = async (id: number, data: any) => {
 
     return await fasilitasApi.updateFasilitas(id, formData);
 };
+
+export const addFasilitas = async (data: any) => {
+    const formData = new FormData();
+    formData.append("nama", data.nama);
+    formData.append("alamat", data.alamat);
+    formData.append("deskripsi", data.deskripsi);
+    formData.append("jam_buka", data.jam_buka);
+    formData.append("jam_tutup", data.jam_tutup);
+    data.foto.forEach((foto: any) => {
+        formData.append("foto", foto);
+    });
+    data.termservice.forEach((termService: any) => {
+        formData.append("termservice", termService);
+    });
+    formData.append("durasi", String(1));
+    formData.append("buka_hari", data.buka_hari);
+    formData.append("no_va", data.no_va);
+
+    return await fasilitasApi.addFasilitas(formData);
+};
+
+export const deleteFasilitas = async (id: string) => {
+    return await fasilitasApi.deleteFasilitas(id);
+};

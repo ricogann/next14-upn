@@ -6,12 +6,13 @@ import { BiSolidDashboard, BiCalendar, BiLogOut } from "react-icons/bi";
 import { FaLandmark } from "react-icons/fa";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { MdMiscellaneousServices } from "react-icons/md";
-import { IoMdNotifications } from "react-icons/io";
+import { useRouter } from "next/navigation";
 
 import logoUPN from "../../../public/logo-upn.png";
 
 export default function Sidebar() {
     const [open, setOpen] = useState(true);
+    const router = useRouter();
 
     const Menus = [
         {
@@ -26,7 +27,7 @@ export default function Sidebar() {
         {
             title: "Miscellaneous",
             src: MdMiscellaneousServices,
-            link: "/admin/miscellaneous",
+            link: "/admin/misc",
         },
     ];
     return (
@@ -61,6 +62,7 @@ export default function Sidebar() {
                                     index === 0 && "bg-light-white"
                                 } `}
                                 key={index}
+                                onClick={() => router.push(menu.link)}
                             >
                                 <menu.src className="text-[30px] text-black" />
                                 <h1

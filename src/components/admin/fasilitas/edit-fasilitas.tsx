@@ -178,7 +178,7 @@ const EditFasilitas = ({ data, toggle }) => {
                                 placeholder="Input Files..."
                                 className={`mb-5 w-full px-5 py-4 placeholder-gray-400 text-gray-700 relative  bg-white rounded text-sm shadow outline-none focus:outline-none focus:ring focus:ring-indigo-200`}
                                 accept=".jpg,.jpeg,.png"
-                                multiple={false}
+                                multiple={true}
                                 onChange={handleChanges}
                             />
                         </div>

@@ -39,7 +39,7 @@ export default function HomeAdmin() {
             </div>
 
             <div className="hidden xl:flex xl:items-center xl:justify-center xl:gap-10 h-screen bg-[#2C666E] ">
-                <div className="flex flex-col justify-between gap-10">
+                <div className="flex flex-col justify-between gap-10 text-white">
                     <div className="">
                         <h1 className="text-5xl font-semibold">
                             Dashboard Admin Sipus
