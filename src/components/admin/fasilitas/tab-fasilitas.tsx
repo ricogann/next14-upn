@@ -58,7 +58,7 @@ export default function TabFasilitas({ data }) {
                         <h1 className="px-6 py-3 bg-[#07393C] text-center text-xs leading-4 font-medium uppercase w-[350px]">
                             Alamat
                         </h1>
-                        <h1 className="px-6 py-3 bg-[#07393C] text-center text-xs leading-4 font-medium uppercase w-[200px]">
+                        <h1 className="px-6 py-3 bg-[#07393C] text-center text-xs leading-4 font-medium uppercase w-[220px]">
                             Action
                         </h1>
                     </div>

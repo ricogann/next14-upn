@@ -6,11 +6,13 @@ import Sidebar from "@/components/ui/sidebar";
 import TabFasilitas from "@/components/admin/fasilitas/tab-fasilitas";
 import TabHarga from "@/components/admin/fasilitas/tab-harga";
 import { getAllHargaFasilitas, getFasilitas } from "@/hooks";
+import { useRouter} from "next/navigation"
 
 export default function FasilitasPage() {
     const [activeTab, setActiveTab] = useState("fasilitas");
     const [fasilitas, setFasilitas] = useState([]);
     const [harga, setHarga] = useState([]);
+    const router = useRouter();
 
     useEffect(() => {
         async function initialize() {
@@ -93,7 +95,7 @@ export default function FasilitasPage() {
                                                     type="text"
                                                     placeholder="Cari Data Fasilitas . . ."
                                                 />
-                                                <button className=" w-full bg-[#07393C] px-5 py-3.5 rounded-lg text-white font-bold uppercase">
+                                                <button className=" w-full bg-[#07393C] px-5 py-3.5 rounded-lg text-white font-bold uppercase" onClick={() => router.push(`/admin/fasilitas/add-fasilitas`)}>
                                                     Add Data
                                                 </button>
                                             </div>
@@ -105,7 +107,7 @@ export default function FasilitasPage() {
                                                     type="text"
                                                     placeholder="Cari Data Harga. . ."
                                                 />
-                                                <button className=" w-full bg-[#07393C] px-5 py-3.5 rounded-lg text-white font-bold uppercase">
+                                                <button className=" w-full bg-[#07393C] px-5 py-3.5 rounded-lg text-white font-bold uppercase" onClick={() => router.push(`/admin/fasilitas/add-harga`)}>
                                                     Add Data
                                                 </button>
                                             </div>

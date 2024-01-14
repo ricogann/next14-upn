@@ -12,7 +12,7 @@ class FasilitasApi extends CoreAPI {
     }
 
     async getHargaFasilitas(id: number) {
-        const res = await this.fetch(`/harga/fasilitas/${id}`, "GET");
+        const res = await this.fetch(`/harga/${id}`, "GET");
         return res;
     }
 
@@ -49,6 +49,23 @@ class FasilitasApi extends CoreAPI {
 
     async addHargaFasilitas(data: any) {
         const res = await this.fetch("/harga/add", "POST", {
+            json: { ...data },
+            isNeedToken: true,
+        });
+
+        return res;
+    }
+
+    async deleteHargaFasilitas(id: number) {
+        const res = await this.fetch(`/Harga/delete/${id}`, "DELETE", {
+            isNeedToken: true,
+        });
+
+        return res;
+    }
+
+    async editHargaFasilitas(id: number, data: any) {
+        const res = await this.fetch(`/harga/update/${id}`, "PUT", {
             json: { ...data },
             isNeedToken: true,
         });

@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import Pagination from "@/components/ui/pagination";
 import Loading from "@/components/ui/loading";
 import splitData from "@/libs";
+import { deleteHargaFasilitas } from "@/hooks";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function TabHarga({ data }) {
     const [page, setPage] = useState(0);
@@ -12,8 +15,31 @@ export default function TabHarga({ data }) {
         setDataShow(splitData(data, 6));
         setLoading(false);
     }, [data]);
+
+    const handleDelete = async (id: number) => {
+        const res = await deleteHargaFasilitas(id);
+        if (res.status === true) {
+            toast.success(res.message, {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            });
+            window.location.reload();
+        } else {
+            toast.error(res.message, {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            });
+        }
+    };
     return (
         <>
+            <ToastContainer />
             <div className="flex flex-wrap overflow-hidden rounded-lg">
                 <div className="rounded-lg overflow-hidden">
                     <div className="flex text-white">
@@ -60,7 +86,12 @@ export default function TabHarga({ data }) {
                                         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mr-2">
                                             Edit
                                         </button>
-                                        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">
+                                        <button
+                                            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
+                                            onClick={() =>
+                                                handleDelete(data.id)
+                                            }
+                                        >
                                             Delete
                                         </button>
                                     </div>
