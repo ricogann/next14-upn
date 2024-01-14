@@ -46,6 +46,15 @@ class FasilitasApi extends CoreAPI {
 
         return res;
     }
+
+    async addHargaFasilitas(data: any) {
+        const res = await this.fetch("/harga/add", "POST", {
+            json: { ...data },
+            isNeedToken: true,
+        });
+
+        return res;
+    }
 }
 
 export default new FasilitasApi();

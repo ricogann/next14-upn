@@ -34,7 +34,7 @@ export default function TabHarga({ data }) {
                         </h1>
                     </div>
 
-                    <div className="bg-white divide-y divide-gray-200 text-black w-[870px]">
+                    <div className="bg-white divide-y divide-gray-200 text-black w-[870px] rounded-b-lg">
                         {dataShow.length > 0 ? (
                             dataShow[page].map((data, index) => (
                                 <div className="flex" key={index}>

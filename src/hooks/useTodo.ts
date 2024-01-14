@@ -194,3 +194,7 @@ export const addFasilitas = async (data: any) => {
 export const deleteFasilitas = async (id: string) => {
     return await fasilitasApi.deleteFasilitas(id);
 };
+
+export const addHargaFasilitas = async (data: any) => {
+    return await fasilitasApi.addHargaFasilitas(data);
+};
