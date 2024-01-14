@@ -16,10 +16,7 @@ const TabBerkas = ({ data }) => {
 
     useEffect(() => {
         setDataShow(splitData(data, 6));
-
-        if (dataShow.length > 0) {
-            setLoading(false);
-        }
+        setLoading(false);
     }, [data]);
 
     const handleTextArea = (e: any) => {
@@ -252,11 +249,11 @@ const TabBerkas = ({ data }) => {
                                 <Loading />
                             </div>
                             <div
-                                className={`text-white text-2xl fixed w-full left-[55%] ${
+                                className={`text-white text-2xl w-[1000px] ${
                                     loading ? "hidden" : ""
                                 }`}
                             >
-                                Data Kosong
+                                Data kosong.. Masih belum ada yang upload berkas
                             </div>
                         </div>
                     )}

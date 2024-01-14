@@ -21,7 +21,7 @@ class FasilitasApi extends CoreAPI {
         return res;
     }
 
-    async updateFasilitas(id: string, formData: any) {
+    async updateFasilitas(id: number, formData: any) {
         const res = await this.fetch(`/fasilitas/${id}`, "PUT", {
             body: formData,
             isNeedToken: true,

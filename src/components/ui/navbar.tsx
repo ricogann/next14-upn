@@ -48,6 +48,7 @@ export default function Navbar() {
                                 src={logo_bpu}
                                 alt="logo"
                                 className="w-[90px] h-[70px]"
+                                priority
                             />
                         </div>
                         <div className="relative">

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import FasilitasDTO from "@/interfaces/fasilitasDTO";
+import Loading from "../ui/loading";
 
 type CardFasilitasProps = {
     data: FasilitasDTO;
@@ -16,11 +17,13 @@ const CardFasilitas: React.FC<CardFasilitasProps> = ({ data, className }) => {
         <>
             <div className="relative">
                 <Image
-                    src={`https://api.ricogann.com/assets/${foto[0]}`}
+                    src={`${process.env.NEXT_PUBLIC_API_URL}/assets/${foto[0]}`}
                     width={150}
                     height={150}
-                    alt="asrama"
+                    alt="foto fasilitas"
                     className={className}
+                    quality={80}
+                    priority
                 />
             </div>
             <div className="hidden md:flex bg-[#07393C] justify-center items-center rounded-b-xl">

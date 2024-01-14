@@ -1,4 +1,10 @@
-import { authApi, bookingApi, usersApi, miscApi } from "@/services";
+import {
+    authApi,
+    bookingApi,
+    usersApi,
+    miscApi,
+    fasilitasApi,
+} from "@/services";
 
 export const login = async (data: any) => {
     if (data.role === "mahasiswa") {
@@ -141,4 +147,26 @@ export const updateDataMisc = async (id: number, data: any) => {
     formData.append("tanda_tangan_old", data.tanda_tangan_old);
 
     return await miscApi.updateDataMisc(id, formData);
+};
+
+export const updateFasilitas = async (id: number, data: any) => {
+    const formData = new FormData();
+    formData.append("nama", data.nama);
+    formData.append("alamat", data.alamat);
+    formData.append("deskripsi", data.deskripsi);
+    formData.append("jam_buka", data.jam_buka);
+    formData.append("jam_tutup", data.jam_tutup);
+    data.foto.forEach((foto: any) => {
+        formData.append("foto", foto);
+    });
+    data.termservice.forEach((termService: any) => {
+        formData.append("termservice", termService);
+    });
+    formData.append("durasi", String(1));
+    formData.append("buka_hari", data.buka_hari);
+    formData.append("no_va", data.no_va);
+    formData.append("name_foto_old", data.name_foto_old);
+    formData.append("name_termservice_old", data.name_termservice_old);
+
+    return await fasilitasApi.updateFasilitas(id, formData);
 };
