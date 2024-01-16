@@ -7,12 +7,14 @@ import { FaLandmark } from "react-icons/fa";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { MdMiscellaneousServices } from "react-icons/md";
 import { useRouter } from "next/navigation";
+import Loading from "./loading";
 
 import logoUPN from "../../../public/logo-upn.png";
 
 export default function Sidebar() {
     const [open, setOpen] = useState(true);
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
 
     const Menus = [
         {
@@ -32,6 +34,13 @@ export default function Sidebar() {
     ];
     return (
         <>
+            <div
+                className={`fixed w-screen h-screen flex items-center justify-center backdrop-blur-sm z-50 ${
+                    loading ? "block" : "hidden"
+                }`}
+            >
+                <Loading />
+            </div>
             <div className="flex h-full">
                 <div
                     className={` ${
@@ -62,7 +71,10 @@ export default function Sidebar() {
                                     index === 0 && "bg-light-white"
                                 } `}
                                 key={index}
-                                onClick={() => router.push(menu.link)}
+                                onClick={() => {
+                                    setLoading(true);
+                                    router.push(menu.link);
+                                }}
                             >
                                 <menu.src className="text-[30px] text-black" />
                                 <h1

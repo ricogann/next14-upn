@@ -74,8 +74,7 @@ export default function DashboardPage() {
                             accountPending={usersPending.length}
                         />
                         <div className="flex flex-row items-start mb-5 border-b border-[#E2E7EE]">
-                            <a
-                                href="#"
+                            <button
                                 onClick={() => toggleTab("bookings")}
                                 className={`text-[18] ${
                                     isTabActive("bookings")
@@ -84,9 +83,8 @@ export default function DashboardPage() {
                                 }`}
                             >
                                 Bookings Fasilitas
-                            </a>
-                            <a
-                                href="#"
+                            </button>
+                            <button
                                 onClick={() => toggleTab("berkas")}
                                 className={`text-[18] ${
                                     isTabActive("berkas")
@@ -95,9 +93,8 @@ export default function DashboardPage() {
                                 }`}
                             >
                                 Berkas Bookings
-                            </a>
-                            <a
-                                href="#"
+                            </button>
+                            <button
                                 onClick={() => toggleTab("account")}
                                 className={`text-[18] ${
                                     isTabActive("account")
@@ -106,7 +103,7 @@ export default function DashboardPage() {
                                 }`}
                             >
                                 Request Account
-                            </a>
+                            </button>
                         </div>
                         <div className="mt-5">
                             {activeTab === "bookings" && (

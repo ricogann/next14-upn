@@ -40,15 +40,15 @@ const Pagination = ({ totalPages, currentPage, handlePage, totalData }) => {
                             <p className="text-sm text-gray-700">
                                 Showing
                                 <span className="mx-1 font-medium">
-                                    {currentPage === 1
-                                        ? 1 * currentPage
-                                        : currentPage === 2
-                                        ? 6
-                                        : 6 * 2}
+                                    {(currentPage - 1) * 6 + 1 > totalData
+                                        ? totalData
+                                        : (currentPage - 1) * 6 + 1}
                                 </span>
                                 to
                                 <span className="mx-1 font-medium">
-                                    {6 * currentPage}
+                                    {totalData - currentPage * 6 < 0
+                                        ? totalData
+                                        : currentPage * 6}
                                 </span>
                                 of
                                 <span className="mx-1 font-medium">
