@@ -72,6 +72,20 @@ class FasilitasApi extends CoreAPI {
 
         return res;
     }
+
+    async getDataKamar() {
+        const res = await this.fetch("/kamar", "GET", {
+            isNeedToken: true,
+        });
+        return res;
+    }
+
+    async getDataHistoryKamar() {
+        const res = await this.fetch("/kamar/history", "GET", {
+            isNeedToken: true,
+        });
+        return res;
+    }
 }
 
 export default new FasilitasApi();

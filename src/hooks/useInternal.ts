@@ -90,3 +90,12 @@ export const getUsersOrganisasiById = async (id: string) => {
 export const getMisc = async () => {
     return await miscApi.getMisc();
 };
+
+// kamar
+export const getKamar = async () => {
+    return await fasilitasApi.getDataKamar();
+};
+
+export const getHistoryKamar = async () => {
+    return await fasilitasApi.getDataHistoryKamar();
+};
