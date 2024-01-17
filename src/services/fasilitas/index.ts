@@ -86,6 +86,15 @@ class FasilitasApi extends CoreAPI {
         });
         return res;
     }
+
+    async updateDataKamar(id: number, data: any) {
+        const res = await this.fetch(`/kamar/update/${id}`, "PUT", {
+            json: { ...data },
+            isNeedToken: true,
+        });
+
+        return res;
+    }
 }
 
 export default new FasilitasApi();

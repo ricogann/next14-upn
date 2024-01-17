@@ -1,17 +1,122 @@
 import { useState, useEffect } from "react";
 import splitData from "@/libs";
 import Loading from "../../ui/loading";
+import { FaXmark, FaCheck } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
+import { updateKamar } from "@/hooks";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const TabKamarAsrama = ({ data, page }) => {
     const [kamar, setKamar] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [isEdit, setIsEdit] = useState<boolean>(false);
+    const [indexEdit, setIndexEdit] = useState<number>(0);
+    const router = useRouter();
+    const [dataEdit, setDataEdit] = useState<any>({
+        id: "",
+        npm_bed1_a: "",
+        npm_bed2_b: "",
+        npm_bed3_c: "",
+    });
 
     useEffect(() => {
         setKamar(splitData(data, 6));
         setLoading(false);
     }, [data]);
+
+    const handleEdit = (
+        index: number,
+        id: string,
+        npm_bed1_a: string,
+        npm_bed2_b: string,
+        npm_bed3_c: string
+    ) => {
+        setIsEdit(true);
+        setIndexEdit(index);
+        setDataEdit({
+            id,
+            npm_bed1_a,
+            npm_bed2_b,
+            npm_bed3_c,
+        });
+    };
+
+    const handleChange = (e) => {
+        setDataEdit({
+            ...dataEdit,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleSubmit = async () => {
+        const { id, ...data } = dataEdit;
+        if (
+            data.npm_bed1_a === ("" || null) ||
+            data.npm_bed2_b === ("" || null) ||
+            data.npm_bed3_c === ""
+        ) {
+            data.status_kamar = true;
+            const res = await updateKamar(dataEdit.id, data);
+            if (res.status === true) {
+                toast.success("Berhasil update data!", {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    draggable: true,
+                });
+                window.location.reload();
+            } else {
+                toast.error("Gagal update data!", {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    draggable: true,
+                });
+            }
+        } else {
+            data.status_kamar = false;
+            const res = await updateKamar(dataEdit.id, data);
+            if (res.status === true) {
+                toast.success("Berhasil update data!", {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    draggable: true,
+                });
+                window.location.reload();
+            } else {
+                toast.error("Gagal update data!", {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    draggable: true,
+                });
+            }
+        }
+    };
+
+    const enterPressed = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            handleSubmit();
+        } else if (e.key === "Escape") {
+            setIsEdit(false);
+            setIndexEdit(0);
+            setDataEdit({
+                id: "",
+                npm_bed1_a: "",
+                npm_bed2_b: "",
+                npm_bed3_c: "",
+            });
+        }
+    };
     return (
         <>
+            <ToastContainer />
             <div className="flex flex-col overflow-hidden rounded-lg">
                 <div className="flex flex-row relative overflow-hidden mb-5">
                     <input
@@ -62,25 +167,120 @@ const TabKamarAsrama = ({ data, page }) => {
                             <div className="px-6 py-3 whitespace-no-wrap w-[170px]">
                                 {data.no_kamar}
                             </div>
-                            <div className={`px-6 py-3 break-all w-[150px]`}>
+                            <div
+                                className={`px-6 py-3 break-all w-[150px] ${
+                                    isEdit && index === indexEdit
+                                        ? "hidden"
+                                        : "block"
+                                }`}
+                            >
                                 {data.npm_bed1_a}
                             </div>
-                            <div className={`px-6 py-3 break-all w-[150px]`}>
+                            <input
+                                name="npm_bed1_a"
+                                value={dataEdit.npm_bed1_a ?? ""}
+                                type="text"
+                                className={`${
+                                    isEdit && index === indexEdit
+                                        ? "block"
+                                        : "hidden"
+                                } w-[140px] h-[40px] mx-1 px-5 py-2 my-2 placeholder-gray-400 text-gray-700 relative bg-white rounded text-sm shadow outline-none focus:outline-none focus:ring focus:ring-indigo-200`}
+                                placeholder="Npm Bed 1"
+                                onChange={handleChange}
+                                onKeyUp={enterPressed}
+                            />
+                            <div
+                                className={`px-6 py-3 break-all w-[150px] ${
+                                    isEdit && index === indexEdit
+                                        ? "hidden"
+                                        : "block"
+                                }
+                            `}
+                            >
                                 {data.npm_bed2_b}
                             </div>
-                            <div className={`px-6 py-3 break-all w-[150px]`}>
+                            <input
+                                name="npm_bed2_b"
+                                value={dataEdit.npm_bed2_b ?? ""}
+                                type="text"
+                                className={`${
+                                    isEdit && index === indexEdit
+                                        ? "block"
+                                        : "hidden"
+                                } w-[140px] h-[40px] mx-1 px-5 py-2 my-2 placeholder-gray-400 text-gray-700 relative bg-white rounded text-sm shadow outline-none focus:outline-none focus:ring focus:ring-indigo-200`}
+                                placeholder="Npm Bed 2"
+                                onChange={handleChange}
+                                onKeyUp={enterPressed}
+                            />
+                            <div
+                                className={`px-6 py-3 break-all w-[150px] ${
+                                    isEdit && index === indexEdit
+                                        ? "hidden"
+                                        : "block"
+                                }`}
+                            >
                                 {data.npm_bed3_c}
                             </div>
+                            <input
+                                name="npm_bed3_c"
+                                value={dataEdit.npm_bed3_c ?? ""}
+                                type="text"
+                                className={`${
+                                    isEdit && index === indexEdit
+                                        ? "block"
+                                        : "hidden"
+                                } w-[140px] h-[40px] mx-1 px-5 py-2 my-2 placeholder-gray-400 text-gray-700 relative bg-white rounded text-sm shadow outline-none focus:outline-none focus:ring focus:ring-indigo-200`}
+                                placeholder="Npm Bed 3"
+                                onChange={handleChange}
+                                onKeyUp={enterPressed}
+                            />
                             <div className="px-6 py-3 break-all w-[140px]">
                                 {data.status_kamar === false
                                     ? "Penuh "
                                     : "Kosong"}
                             </div>
-                            <div className="flex flex-col gap-2 w-[200px]">
+                            <button
+                                className={`w-[120px] bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md text-[15px] mx-10 my-1 ${
+                                    isEdit && index === indexEdit
+                                        ? "hidden"
+                                        : "block"
+                                }`}
+                                onClick={() =>
+                                    handleEdit(
+                                        index,
+                                        data.id_asrama,
+                                        data.npm_bed1_a,
+                                        data.npm_bed2_b,
+                                        data.npm_bed3_c
+                                    )
+                                }
+                            >
+                                Edit
+                            </button>
+
+                            <div
+                                className={`flex items-center justify-center w-[200px] gap-5 ${
+                                    isEdit && index === indexEdit
+                                        ? "block"
+                                        : "hidden"
+                                }`}
+                            >
                                 <button
-                                    className={` bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md text-[15px] mx-10 my-1`}
+                                    onClick={() => {
+                                        setIsEdit(false);
+                                        setIndexEdit(0);
+                                        setDataEdit({
+                                            id: "",
+                                            npm_bed1_a: "",
+                                            npm_bed2_b: "",
+                                            npm_bed3_c: "",
+                                        });
+                                    }}
                                 >
-                                    Edit
+                                    <FaXmark className="text-white font-bold text-4xl rounded-xl bg-red-500 p-2" />
+                                </button>
+                                <button onClick={handleSubmit}>
+                                    <FaCheck className="text-white font-bold text-4xl rounded-xl bg-green-500 p-2" />
                                 </button>
                             </div>
                         </div>
