@@ -8,6 +8,9 @@ import TabBookings from "@/components/admin/dashboard/tab-bookings";
 import TabBerkas from "@/components/admin/dashboard/tab-berkas";
 import TabAccount from "@/components/admin/dashboard/tab-account";
 import { getBooking, getUsers } from "@/hooks";
+import Loading from "@/components/ui/loading";
+import { parseJwt, getClientSideCookie } from "@/libs/auth";
+import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
     const [activeTab, setActiveTab] = useState("bookings");
@@ -16,6 +19,8 @@ export default function DashboardPage() {
     const [reviewBerkas, setReviewBerkas] = useState([]);
     const [totalUsers, setTotalUsers] = useState(0);
     const [usersPending, setUsersPending] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
     const toggleTab = (tab: string) => {
         setActiveTab(tab);
@@ -25,17 +30,39 @@ export default function DashboardPage() {
 
     useEffect(() => {
         async function initialize() {
+            const cookie = getClientSideCookie();
+            if (cookie.token === undefined) {
+                router.push("/admin");
+                return;
+            } else if (parseJwt(cookie.token).role) {
+                router.push("/");
+                return;
+            }
+            setLoading(false);
             const booking = await getBooking();
             const bookingPending = booking.data.filter(
                 (item) => item.status === "Menunggu Konfirmasi"
             );
+            bookingPending.sort((a, b) => {
+                return (
+                    new Date(b.createdAt).getTime() -
+                    new Date(a.createdAt).getTime()
+                );
+            });
             const reviewBerkas = booking.data.filter(
                 (item) => item.status === "Review Berkas"
             );
+            reviewBerkas.sort((a, b) => {
+                return (
+                    new Date(b.createdAt).getTime() -
+                    new Date(a.createdAt).getTime()
+                );
+            });
             const users = await getUsers();
             const usersPending = users.data.filter(
                 (item) => item.status_account === false
             );
+
             setTotalBooking(booking.data.length);
             setBookingsPending(bookingPending);
             setReviewBerkas(reviewBerkas);
@@ -50,6 +77,14 @@ export default function DashboardPage() {
         <>
             <div className="xl:hidden">
                 <Error />
+            </div>
+
+            <div
+                className={`fixed h-screen w-screen flex items-center justify-center backdrop-blur-xl z-50 ${
+                    loading ? "block" : "hidden"
+                }`}
+            >
+                <Loading />
             </div>
 
             <div className="hidden xl:flex">

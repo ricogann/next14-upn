@@ -4,22 +4,58 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Error from "@/components/ui/error-tampilan";
 import Sidebar from "@/components/ui/sidebar";
-import { getFasilitasById } from "@/hooks";
+import { getFasilitasById, getBookingByIdFasilitas } from "@/hooks";
 import { BsFillPinMapFill } from "react-icons/bs";
 import { BiBookmark } from "react-icons/bi";
 import { MdPayment, MdOutlineWatchLater } from "react-icons/md";
 import EditFasilitas from "@/components/admin/fasilitas/edit-fasilitas";
+import Loading from "@/components/ui/loading";
+import { parseJwt, getClientSideCookie } from "@/libs/auth";
+import { useRouter } from "next/navigation";
+import TabHistoryBooking from "@/components/admin/booking/tab-historybooking";
+import Pagination from "@/components/ui/pagination";
+import splitData from "@/libs";
 
 export default function DetailFasilitasPage() {
     const pathname = usePathname();
     const id = pathname.split("/")[3];
     const [fasilitas, setFasilitas] = useState([]);
+    const [booking, setBooking] = useState([]);
     const [isEdit, setIsEdit] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(0);
+    const [totalPage, setTotalPage] = useState(0);
+
+    const [activeTab, setActiveTab] = useState("history");
+    const toggleTab = (tab: string) => {
+        setActiveTab(tab);
+    };
+
+    const isTabActive = (tab: string) => activeTab === tab;
+    const router = useRouter();
 
     useEffect(() => {
         async function initialize() {
+            const cookie = getClientSideCookie();
+            if (cookie.token === undefined) {
+                router.push("/admin");
+                return;
+            } else if (parseJwt(cookie.token).role) {
+                router.push("/");
+                return;
+            }
+
+            setLoading(false);
             const fasilitas = await getFasilitasById(id);
+            const booking = await getBookingByIdFasilitas(id);
+            const filteredBooking = booking.data.filter(
+                (data) =>
+                    data.status === "Dikonfirmasi" ||
+                    data.status === "Dibatalkan"
+            );
             setFasilitas(fasilitas.data);
+            setBooking(filteredBooking);
+            setTotalPage(splitData(filteredBooking, 6).length);
         }
 
         initialize();
@@ -28,6 +64,14 @@ export default function DetailFasilitasPage() {
         <>
             <div className="xl:hidden">
                 <Error />
+            </div>
+
+            <div
+                className={`fixed h-screen w-screen flex items-center justify-center backdrop-blur-xl z-50 ${
+                    loading ? "block" : "hidden"
+                }`}
+            >
+                <Loading />
             </div>
 
             <div className="hidden xl:flex">
@@ -176,6 +220,50 @@ export default function DetailFasilitasPage() {
                                 data={fasilitas}
                                 toggle={() => setIsEdit(false)}
                             />
+                        </div>
+                    </div>
+                    <div className={` ${isEdit ? "hidden" : ""}`}>
+                        <div className="flex flex-row items-start mb-5 border-b border-[#E2E7EE] mx-10">
+                            <button
+                                onClick={() => toggleTab("history")}
+                                className={`text-[18] ${
+                                    isTabActive("history")
+                                        ? "font-bold mb-3 mr-14 border-b-2 border-[#FFA101]"
+                                        : "font-regular mb-3 mr-14"
+                                }`}
+                            >
+                                History Booking
+                            </button>
+                            <button
+                                onClick={() => toggleTab("berkas")}
+                                className={`text-[18] ${
+                                    isTabActive("berkas")
+                                        ? "font-bold mb-3 mr-14 border-b-2 border-[#FFA101]"
+                                        : "font-regular mb-3 mr-14"
+                                } ${
+                                    fasilitas?.nama === "Asrama"
+                                        ? "block"
+                                        : "hidden"
+                                }`}
+                            >
+                                Kamar Asrama
+                            </button>
+                        </div>
+                        <div className="mx-10">
+                            <div
+                                className={`
+                            ${isTabActive("history") ? "block" : "hidden"}`}
+                            >
+                                <TabHistoryBooking data={booking} page={page} />
+                                <div className="mb-10">
+                                    <Pagination
+                                        totalPages={totalPage}
+                                        currentPage={page + 1}
+                                        handlePage={setPage}
+                                        totalData={booking.length}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

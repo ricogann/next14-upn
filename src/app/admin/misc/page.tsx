@@ -5,13 +5,27 @@ import Sidebar from "@/components/ui/sidebar";
 import InfoData from "@/components/admin/misc/info-data";
 import EditData from "@/components/admin/misc/edit-data";
 import { getMisc } from "@/hooks";
+import Loading from "@/components/ui/loading";
+import { parseJwt, getClientSideCookie } from "@/libs/auth";
+import { useRouter } from "next/navigation";
 
 export default function MiscPage() {
     const [misc, setMisc] = useState({});
     const [isEdit, setIsEdit] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         async function initialize() {
+            const cookie = getClientSideCookie();
+            if (cookie.token === undefined) {
+                router.push("/admin");
+                return;
+            } else if (parseJwt(cookie.token).role) {
+                router.push("/");
+                return;
+            }
+            setLoading(false);
             const res = await getMisc();
             setMisc(res.data);
         }
@@ -21,6 +35,13 @@ export default function MiscPage() {
         <>
             <div className="xl:hidden">
                 <Error />
+            </div>
+            <div
+                className={`fixed h-screen w-screen flex items-center justify-center backdrop-blur-xl z-50 ${
+                    loading ? "block" : "hidden"
+                }`}
+            >
+                <Loading />
             </div>
 
             <div className="hidden xl:flex">

@@ -13,6 +13,9 @@ import TabUmum from "@/components/admin/users/tab-umum";
 import TabMahasiswa from "@/components/admin/users/tab-mahasiswa";
 import TabUkm from "@/components/admin/users/tab-ukm";
 import TabOrganisasi from "@/components/admin/users/tab-organisasi";
+import Loading from "@/components/ui/loading";
+import { parseJwt, getClientSideCookie } from "@/libs/auth";
+import { useRouter } from "next/navigation";
 
 export default function UsersPage() {
     const [activeTab, setActiveTab] = useState("umum");
@@ -24,9 +27,20 @@ export default function UsersPage() {
     const [usersUkm, setUsersUkm] = useState([]);
     const [usersOrganisasi, setUsersOrganisasi] = useState([]);
     const [usersMahasiswa, setUsersMahasiswa] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         async function initialize() {
+            const cookie = getClientSideCookie();
+            if (cookie.token === undefined) {
+                router.push("/admin");
+                return;
+            } else if (parseJwt(cookie.token).role) {
+                router.push("/");
+                return;
+            }
+            setLoading(false);
             const umum = await getUsersUmum();
             const ukm = await getUsersUkm();
             const organisasi = await getUsersOrganisasi();
@@ -44,6 +58,13 @@ export default function UsersPage() {
         <>
             <div className="xl:hidden">
                 <Error />
+            </div>
+            <div
+                className={`fixed h-screen w-screen flex items-center justify-center backdrop-blur-xl z-50 ${
+                    loading ? "block" : "hidden"
+                }`}
+            >
+                <Loading />
             </div>
 
             <div className="hidden xl:flex">

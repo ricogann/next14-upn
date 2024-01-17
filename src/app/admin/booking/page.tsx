@@ -8,6 +8,8 @@ import { getBooking, updateStatusBooking } from "@/hooks";
 import splitData from "@/libs";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { parseJwt, getClientSideCookie } from "@/libs/auth";
+import { useRouter } from "next/navigation";
 
 export default function BookingPage() {
     const [bookings, setBookings] = useState<any[]>([]);
@@ -17,10 +19,27 @@ export default function BookingPage() {
     const [page, setPage] = useState(0);
     const [id, setId] = useState(0);
     const [keterangan, setKeterangan] = useState("");
+    const [searchText, setSearchText] = useState("");
+    const router = useRouter();
 
     useEffect(() => {
         async function initialize() {
+            const cookie = getClientSideCookie();
+            if (cookie.token === undefined) {
+                router.push("/admin");
+                return;
+            } else if (parseJwt(cookie.token).role) {
+                router.push("/");
+                return;
+            }
+            setLoading(false);
             const booking = await getBooking();
+            booking.data.sort((a, b) => {
+                return (
+                    new Date(b.createdAt).getTime() -
+                    new Date(a.createdAt).getTime()
+                );
+            });
             const split = splitData(booking.data, 6);
             setBookings(booking.data);
             setBooking(split);
@@ -28,6 +47,52 @@ export default function BookingPage() {
         }
         initialize();
     }, []);
+
+    useEffect(() => {
+        const filteredData = bookings.filter((item) =>
+            Object.values(item).some((value) => {
+                if (
+                    typeof value === "string" ||
+                    typeof value === "number" ||
+                    value instanceof Date
+                ) {
+                    const stringValue =
+                        typeof value === "string" ? value : String(value);
+
+                    return stringValue
+                        .toLowerCase()
+                        .includes(searchText.toLowerCase());
+                } else {
+                    if (value && "status" in value) {
+                        return value.status
+                            .toLowerCase()
+                            .includes(searchText.toLowerCase());
+                    } else if (value && "total_harga" in value) {
+                        return value.total_harga
+                            .toLowerCase()
+                            .includes(searchText.toLowerCase());
+                    } else if (value && "tanggal_pemesanan" in value) {
+                        return value.tanggal_pemesanan
+                            .toLowerCase()
+                            .includes(searchText.toLowerCase());
+                    } else if (value && "Fasilitas" in value) {
+                        console.log(value.Fasilitas);
+                        return value.Fasilitas.toLowerCase().includes(
+                            searchText.toLowerCase()
+                        );
+                    } else if (value && "id_pemesanan" in value) {
+                        return value.id_pemesanan
+                            .toLowerCase()
+                            .includes(searchText.toLowerCase());
+                    }
+                }
+                return false;
+            })
+        );
+
+        setBooking(splitData(filteredData, 6));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [bookings, searchText]);
 
     const handleTextArea = (e: any) => {
         setKeterangan(e.target.value);
@@ -95,6 +160,14 @@ export default function BookingPage() {
                     <Error />
                 </div>
 
+                <div
+                    className={`fixed h-screen w-screen flex items-center justify-center backdrop-blur-xl z-50 ${
+                        loading ? "block" : "hidden"
+                    }`}
+                >
+                    <Loading />
+                </div>
+
                 <div className="hidden xl:flex">
                     <div className="">
                         <Sidebar />
@@ -123,6 +196,9 @@ export default function BookingPage() {
                                         className="w-auto h-[50px] px-5 py-3 bg-white border border-gray-300 rounded-xl text-[20px] font-bold outline-none"
                                         type="text"
                                         placeholder="Cari Data Booking . . ."
+                                        onChange={(e) =>
+                                            setSearchText(e.target.value)
+                                        }
                                     />
                                 </div>
                             </div>

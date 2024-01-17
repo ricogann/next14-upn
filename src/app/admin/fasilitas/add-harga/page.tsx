@@ -8,10 +8,13 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getAllHargaFasilitas, getFasilitas } from "@/hooks";
 import { addHargaFasilitas } from "@/hooks";
+import Loading from "@/components/ui/loading";
+import { parseJwt, getClientSideCookie } from "@/libs/auth";
 
 export default function AddHarga() {
     const router = useRouter();
     const [fasilitas, setFasilitas] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [harga, setHarga] = useState({
         id_fasilitas: "",
         nama: "",
@@ -20,6 +23,15 @@ export default function AddHarga() {
 
     useEffect(() => {
         async function initialize() {
+            const cookie = getClientSideCookie();
+            if (cookie.token === undefined) {
+                router.push("/admin");
+                return;
+            } else if (parseJwt(cookie.token).role) {
+                router.push("/");
+                return;
+            }
+            setLoading(false);
             const fasilitas = await getFasilitas();
             const harga = await getAllHargaFasilitas();
             setFasilitas(fasilitas.data);
@@ -83,6 +95,13 @@ export default function AddHarga() {
                 <Error />
             </div>
 
+            <div
+                className={`fixed h-screen w-screen flex items-center justify-center backdrop-blur-xl z-50 ${
+                    loading ? "block" : "hidden"
+                }`}
+            >
+                <Loading />
+            </div>
             <div className="hidden xl:flex">
                 <div className="min-h-screen">
                     <Sidebar />

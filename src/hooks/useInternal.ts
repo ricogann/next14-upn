@@ -45,6 +45,10 @@ export const getBookingByIdUser = async (id: string) => {
     return await bookingApi.getBookingByIdUser(id);
 };
 
+export const getBookingByIdFasilitas = async (id: string) => {
+    return await bookingApi.getBookingByIdFasilitas(id);
+};
+
 // user
 export const getUsers = async () => {
     return await usersApi.getUsers();

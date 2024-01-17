@@ -29,7 +29,7 @@ export class CoreAPI {
         expireable: boolean;
     }) => {
         jsCookie.set("CERT", token, {
-            expires: expireable ? 7 : undefined,
+            expires: expireable ? 1 : undefined,
             path: "/",
             secure: true,
             sameSite: "Lax",

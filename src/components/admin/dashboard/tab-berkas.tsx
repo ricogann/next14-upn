@@ -242,7 +242,7 @@ const TabBerkas = ({ data }) => {
                     ) : (
                         <div className="">
                             <div
-                                className={`fixed w-full left-[55%] ${
+                                className={`relative left-[120%] flex items-center justify-center${
                                     loading ? "" : "hidden"
                                 }`}
                             >

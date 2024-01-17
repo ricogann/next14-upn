@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Error from "@/components/ui/error-tampilan";
 import Sidebar from "@/components/ui/sidebar";
@@ -7,9 +7,25 @@ import { addFasilitas } from "@/hooks";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loading from "@/components/ui/loading";
+import { parseJwt, getClientSideCookie } from "@/libs/auth";
 
 export default function AddFasilitas() {
     const router = useRouter();
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const cookie = getClientSideCookie();
+        if (cookie.token === undefined) {
+            router.push("/admin");
+            return;
+        } else if (parseJwt(cookie.token).role) {
+            router.push("/");
+            return;
+        }
+        setLoading(false);
+    }, []);
+
     const [fasilitas, setFasilitas] = useState({
         nama: "",
         alamat: "",
@@ -38,7 +54,6 @@ export default function AddFasilitas() {
     };
 
     const handleSubmit = async () => {
-        console.log(fasilitas);
         if (
             fasilitas.nama === "" ||
             fasilitas.alamat === "" ||
@@ -84,6 +99,14 @@ export default function AddFasilitas() {
             <ToastContainer />
             <div className="xl:hidden">
                 <Error />
+            </div>
+
+            <div
+                className={`fixed h-screen w-screen flex items-center justify-center backdrop-blur-xl z-50 ${
+                    loading ? "block" : "hidden"
+                }`}
+            >
+                <Loading />
             </div>
 
             <div className="hidden xl:flex">

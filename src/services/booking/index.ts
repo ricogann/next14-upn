@@ -13,6 +13,13 @@ class BookingApi extends CoreAPI {
         return res;
     }
 
+    async getBookingByIdFasilitas(id: string) {
+        const res = await this.fetch(`/booking/fasilitas/${id}`, "GET", {
+            isNeedToken: true,
+        });
+        return res;
+    }
+
     async createBooking(json: any) {
         const res = await this.fetch("/booking/add", "POST", {
             json: { ...json },

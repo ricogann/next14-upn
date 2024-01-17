@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 import { AiOutlineArrowLeft } from "react-icons/ai";
@@ -8,7 +8,7 @@ import { BsFillPeopleFill } from "react-icons/bs";
 import { MdMiscellaneousServices } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import Loading from "./loading";
-
+import Cookies from "js-cookie";
 import logoUPN from "../../../public/logo-upn.png";
 
 export default function Sidebar() {
@@ -41,7 +41,7 @@ export default function Sidebar() {
             >
                 <Loading />
             </div>
-            <div className="flex h-full">
+            <div className="flex h-full overflow-hidden">
                 <div
                     className={` ${
                         open ? "w-56" : "w-20 "
@@ -86,6 +86,31 @@ export default function Sidebar() {
                                 </h1>
                             </div>
                         ))}
+                    </div>
+                    <div className="absolute bottom-5 w-[185px]">
+                        <div
+                            className={`flex flex-col gap-5 rounded-xl pb-1 ${
+                                open ? "bg-red-500" : "mt-2"
+                            }`}
+                        >
+                            <div
+                                className={`flex  rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-2 `}
+                                onClick={() => {
+                                    setLoading(true);
+                                    Cookies.remove("CERT");
+                                    router.push("/admin");
+                                }}
+                            >
+                                <BiLogOut className="text-[30px] text-white" />
+                                <h1
+                                    className={`${
+                                        !open && "hidden"
+                                    } origin-left duration-200 text-[15px] text-white font-bold`}
+                                >
+                                    Logout
+                                </h1>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

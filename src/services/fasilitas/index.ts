@@ -12,7 +12,7 @@ class FasilitasApi extends CoreAPI {
     }
 
     async getHargaFasilitas(id: number) {
-        const res = await this.fetch(`/harga/${id}`, "GET");
+        const res = await this.fetch(`/harga/fasilitas/${id}`, "GET");
         return res;
     }
 

@@ -8,11 +8,14 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { usePathname } from "next/navigation";
 import { getHargaFasilitas, editHargaFasilitas } from "@/hooks";
+import Loading from "@/components/ui/loading";
+import { parseJwt, getClientSideCookie } from "@/libs/auth";
 
 export default function EditHarga() {
     const router = useRouter();
     const pathname = usePathname();
     const id = pathname.split("/")[4];
+    const [loading, setLoading] = useState(true);
     const [harga, setHarga] = useState({
         nama_fasilitas: "",
         nama: "",
@@ -21,6 +24,15 @@ export default function EditHarga() {
 
     useEffect(() => {
         async function initialize() {
+            const cookie = getClientSideCookie();
+            if (cookie.token === undefined) {
+                router.push("/admin");
+                return;
+            } else if (parseJwt(cookie.token).role) {
+                router.push("/");
+                return;
+            }
+            setLoading(false);
             const harga = await getHargaFasilitas(Number(id));
             if (harga.status === true) {
                 setHarga({
@@ -33,8 +45,6 @@ export default function EditHarga() {
 
         initialize();
     }, []);
-
-    console.log(harga);
 
     const handleChanges = (e: any) => {
         setHarga({
@@ -80,6 +90,14 @@ export default function EditHarga() {
             <ToastContainer />
             <div className="xl:hidden">
                 <Error />
+            </div>
+
+            <div
+                className={`fixed h-screen w-screen flex items-center justify-center backdrop-blur-xl z-50 ${
+                    loading ? "block" : "hidden"
+                }`}
+            >
+                <Loading />
             </div>
 
             <div className="hidden xl:flex">

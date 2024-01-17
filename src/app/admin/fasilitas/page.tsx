@@ -6,16 +6,28 @@ import Sidebar from "@/components/ui/sidebar";
 import TabFasilitas from "@/components/admin/fasilitas/tab-fasilitas";
 import TabHarga from "@/components/admin/fasilitas/tab-harga";
 import { getAllHargaFasilitas, getFasilitas } from "@/hooks";
-import { useRouter} from "next/navigation"
+import { useRouter } from "next/navigation";
+import Loading from "@/components/ui/loading";
+import { parseJwt, getClientSideCookie } from "@/libs/auth";
 
 export default function FasilitasPage() {
     const [activeTab, setActiveTab] = useState("fasilitas");
     const [fasilitas, setFasilitas] = useState([]);
     const [harga, setHarga] = useState([]);
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
         async function initialize() {
+            const cookie = getClientSideCookie();
+            if (cookie.token === undefined) {
+                router.push("/admin");
+                return;
+            } else if (parseJwt(cookie.token).role) {
+                router.push("/");
+                return;
+            }
+            setLoading(false);
             const fasilitas = await getFasilitas();
             const harga = await getAllHargaFasilitas();
             setFasilitas(fasilitas.data);
@@ -33,6 +45,14 @@ export default function FasilitasPage() {
         <>
             <div className="xl:hidden">
                 <Error />
+            </div>
+
+            <div
+                className={`fixed h-screen w-screen flex items-center justify-center backdrop-blur-xl z-50 ${
+                    loading ? "block" : "hidden"
+                }`}
+            >
+                <Loading />
             </div>
 
             <div className="hidden xl:flex">
@@ -95,7 +115,14 @@ export default function FasilitasPage() {
                                                     type="text"
                                                     placeholder="Cari Data Fasilitas . . ."
                                                 />
-                                                <button className=" w-full bg-[#07393C] px-5 py-3.5 rounded-lg text-white font-bold uppercase" onClick={() => router.push(`/admin/fasilitas/add-fasilitas`)}>
+                                                <button
+                                                    className=" w-full bg-[#07393C] px-5 py-3.5 rounded-lg text-white font-bold uppercase"
+                                                    onClick={() =>
+                                                        router.push(
+                                                            `/admin/fasilitas/add-fasilitas`
+                                                        )
+                                                    }
+                                                >
                                                     Add Data
                                                 </button>
                                             </div>
@@ -107,7 +134,14 @@ export default function FasilitasPage() {
                                                     type="text"
                                                     placeholder="Cari Data Harga. . ."
                                                 />
-                                                <button className=" w-full bg-[#07393C] px-5 py-3.5 rounded-lg text-white font-bold uppercase" onClick={() => router.push(`/admin/fasilitas/add-harga`)}>
+                                                <button
+                                                    className=" w-full bg-[#07393C] px-5 py-3.5 rounded-lg text-white font-bold uppercase"
+                                                    onClick={() =>
+                                                        router.push(
+                                                            `/admin/fasilitas/add-harga`
+                                                        )
+                                                    }
+                                                >
                                                     Add Data
                                                 </button>
                                             </div>

@@ -73,6 +73,7 @@ const FormBooking: React.FC<FormBookingProps> = ({ booking, fasilitas }) => {
                     Number(path.split("/")[2])
                 );
 
+                console.log(harga);
                 setHarga(harga.data);
                 setPesan({
                     ...pesan,
