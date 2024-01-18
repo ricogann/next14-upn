@@ -210,3 +210,7 @@ export const editHargaFasilitas = async (id: number, data: any) => {
 export const updateKamar = async (id: number, data: any) => {
     return await fasilitasApi.updateDataKamar(id, data);
 };
+
+export const updateActiveFasilitas = async (id: string, data: any) => {
+    return await fasilitasApi.updateActiveFasilitas(id, data);
+};

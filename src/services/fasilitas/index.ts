@@ -95,6 +95,15 @@ class FasilitasApi extends CoreAPI {
 
         return res;
     }
+
+    async updateActiveFasilitas(id: string, data: any) {
+        const res = await this.fetch(`/fasilitas/update-active/${id}`, "PUT", {
+            json: { ...data },
+            isNeedToken: true,
+        });
+
+        return res;
+    }
 }
 
 export default new FasilitasApi();

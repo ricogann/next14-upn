@@ -8,18 +8,26 @@ import FormBooking from "@/components/booking/form-booking";
 import FasilitasDTO from "@/interfaces/fasilitasDTO";
 import BookingDTO from "@/interfaces/bookingDTO";
 import { getFasilitasById, getBooking } from "@/hooks";
+import { useRouter } from "next/navigation";
+import Loading from "@/components/ui/loading";
 
 export default function Booking() {
     const path = usePathname();
     const [fasilitas, setFasilitas] = useState<FasilitasDTO>();
     const [booking, setBooking] = useState<BookingDTO[]>([]);
-    const [isAvailable, setIsAvailable] = useState(true);
+    const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         async function initialize() {
             const fasilitas = await getFasilitasById(path.split("/")[2]);
             const booking = await getBooking();
 
+            if (fasilitas.data.active === false) {
+                router.push("/");
+            } else {
+                setLoading(false);
+            }
             setBooking(booking.data);
             setFasilitas(fasilitas.data);
         }
@@ -28,6 +36,13 @@ export default function Booking() {
     }, []);
     return (
         <>
+            <div
+                className={`fixed w-screen h-screen z-[99999] backdrop-blur-xl flex items-center justify-center ${
+                    loading ? "block" : "hidden"
+                }`}
+            >
+                <Loading />
+            </div>
             <div className="min-h-screen bg-[#2C666E] relative">
                 <Navbar />
                 <div className="p-10 xl:px-28">

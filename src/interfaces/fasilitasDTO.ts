@@ -11,4 +11,5 @@ export default interface FasilitasDTO {
     durasi: number;
     no_va: string;
     termservice: string;
+    active: boolean;
 }

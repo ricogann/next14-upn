@@ -9,6 +9,7 @@ import {
     getBookingByIdFasilitas,
     getKamar,
     getHistoryKamar,
+    updateActiveFasilitas,
 } from "@/hooks";
 import { BsFillPinMapFill } from "react-icons/bs";
 import { BiBookmark } from "react-icons/bi";
@@ -22,6 +23,8 @@ import TabKamarAsrama from "@/components/admin/fasilitas/tab-kamarasrama";
 import TabHistoryKamar from "@/components/admin/fasilitas/tab-historykamar";
 import Pagination from "@/components/ui/pagination";
 import splitData from "@/libs";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function DetailFasilitasPage() {
     const pathname = usePathname();
@@ -85,8 +88,32 @@ export default function DetailFasilitasPage() {
 
         initialize();
     }, []);
+
+    const handleActiveFasilitas = async (id: string, active: boolean) => {
+        const res = await updateActiveFasilitas(id, { active: active });
+        if (res.status === true) {
+            toast.success("Ubah status fasilitas berhasil!", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            });
+            window.location.reload();
+        } else {
+            toast.error("Ubah status fasilitas error!", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+            });
+        }
+    };
+
     return (
         <>
+            <ToastContainer />
             <div className="xl:hidden">
                 <Error />
             </div>
@@ -232,10 +259,30 @@ export default function DetailFasilitasPage() {
                                         Edit Fasilitas
                                     </button>
                                     <button
-                                        className={`border border-black w-[270px] bg-[#07393C] p-2 rounded-lg text-white font-bold uppercase mt-5 `}
-                                        onClick={() => setIsEdit(true)}
+                                        className={`border border-black w-[270px] bg-[#07393C] p-2 rounded-lg text-white font-bold uppercase mt-5 ${
+                                            fasilitas?.active ? "hidden" : ""
+                                        }`}
+                                        onClick={() =>
+                                            handleActiveFasilitas(
+                                                fasilitas.id_fasilitas,
+                                                true
+                                            )
+                                        }
                                     >
                                         BUKA BOOKING FASILITAS
+                                    </button>
+                                    <button
+                                        className={`w-[270px] bg-red-500 p-2 rounded-lg text-white font-bold uppercase mt-5 ${
+                                            fasilitas?.active ? "" : "hidden"
+                                        }`}
+                                        onClick={() =>
+                                            handleActiveFasilitas(
+                                                fasilitas.id_fasilitas,
+                                                false
+                                            )
+                                        }
+                                    >
+                                        TUTUP BOOKING FASILITAS
                                     </button>
                                 </div>
                             </div>

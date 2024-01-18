@@ -30,6 +30,8 @@ const InfoFasilitas: React.FC<InfoFasilitasProps> = ({ data }) => {
         }
     }, []);
 
+    console.log(data.active);
+
     return (
         <>
             {loading && (
@@ -58,9 +60,10 @@ const InfoFasilitas: React.FC<InfoFasilitasProps> = ({ data }) => {
                             <button
                                 className={`w-24 bg-[#07393C] hover:bg-[#F0EDEE] hover:text-[#0A090C] text-white font-bold p-1 lg:p-2 text-[10px] border-black border-[2px] xl:text-[17px] xl:w-32 rounded-lg
                                 ${
-                                    data.nama === "Asrama" &&
-                                    account &&
-                                    account.role !== "mahasiswa"
+                                    (data.nama === "Asrama" &&
+                                        account &&
+                                        account.role !== "mahasiswa") ||
+                                    data.active === false
                                         ? "opacity-50 cursor-not-allowed"
                                         : ""
                                 }`}
@@ -75,9 +78,10 @@ const InfoFasilitas: React.FC<InfoFasilitasProps> = ({ data }) => {
                                     }
                                 }}
                                 disabled={
-                                    data.nama === "Asrama" &&
-                                    account &&
-                                    account.role !== "mahasiswa"
+                                    (data.nama === "Asrama" &&
+                                        account &&
+                                        account.role !== "mahasiswa") ||
+                                    data.active === false
                                         ? true
                                         : false
                                 }
@@ -86,6 +90,26 @@ const InfoFasilitas: React.FC<InfoFasilitasProps> = ({ data }) => {
                             </button>
                         </div>
                     </div>
+                    <h1
+                        className={`text-red-500 text-[12px] px-5 pb-2 md:px-8 xl:px-14 xl:text-[15px] ${
+                            data.active === false && data.nama !== "Kantin"
+                                ? ""
+                                : "hidden"
+                        }`}
+                    >
+                        *Layanan penyewaan sedang tidak tersedia untuk fasilitas
+                        ini.
+                    </h1>
+                    <h1
+                        className={`text-red-500 text-[12px] px-5 pb-2 md:px-8 xl:px-14 xl:text-[15px] ${
+                            data.active === false && data.nama === "Kantin"
+                                ? ""
+                                : "hidden"
+                        }`}
+                    >
+                        *Hubungi Nomor Hp yang tertera di bawah untuk melakukan
+                        pemesanan.
+                    </h1>
                     <div className="flex flex-col items-start gap-5 md:flex-row text-[8px] md:text-[12px] xl:text-[18px] border-[#07393C] border-t-[2px] p-5 md:p-8 xl:px-14 xl:py-10">
                         <div className="flex gap-3 items-start">
                             <BsFillPinMapFill className="text-black font-bold text-lg lg:text-xl" />

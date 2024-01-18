@@ -10,11 +10,14 @@ import { useRouter } from "next/navigation";
 import Loading from "./loading";
 import Cookies from "js-cookie";
 import logoUPN from "../../../public/logo-upn.png";
+import { usePathname } from "next/navigation";
 
 export default function Sidebar() {
     const [open, setOpen] = useState(true);
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const path = usePathname();
+    const link = path.split("/")[2];
 
     const Menus = [
         {
@@ -73,7 +76,11 @@ export default function Sidebar() {
                                 key={index}
                                 onClick={() => {
                                     setLoading(true);
-                                    router.push(menu.link);
+                                    if (link !== menu.link.split("/")[2]) {
+                                        router.push(menu.link);
+                                    } else {
+                                        window.location.reload();
+                                    }
                                 }}
                             >
                                 <menu.src className="text-[30px] text-black" />
