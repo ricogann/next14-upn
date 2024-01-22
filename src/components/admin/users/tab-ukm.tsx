@@ -1,5 +1,5 @@
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Pagination from "@/components/ui/pagination";
 import Loading from "@/components/ui/loading";
 import splitData from "@/libs";
@@ -7,8 +7,13 @@ import { decryptPassword } from "@/libs/auth";
 import { updateStatusAccount } from "@/hooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import UKM from "@/interfaces/usersDTO";
 
-const TabUkm = ({ data }) => {
+interface Props {
+    data: UKM[];
+}
+
+const TabUkm: React.FC<Props> = ({ data }) => {
     const [eyeOpen, setEyeOpen] = useState(true);
     const [page, setPage] = useState(0);
     const [dataShow, setDataShow] = useState<any[]>([]);
@@ -93,7 +98,7 @@ const TabUkm = ({ data }) => {
 
                     <div className="flex flex-col rounded-b-lg bg-white divide-y divide-gray-200 text-black">
                         {dataShow.length > 0 ? (
-                            dataShow[page].map((ukm, index) => (
+                            dataShow[page].map((ukm: UKM, index: number) => (
                                 <div className="flex" key={index}>
                                     <div className="px-6 py-4 w-[50px]">
                                         {ukm.id}

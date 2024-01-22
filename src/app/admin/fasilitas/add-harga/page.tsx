@@ -10,10 +10,11 @@ import { getAllHargaFasilitas, getFasilitas } from "@/hooks";
 import { addHargaFasilitas } from "@/hooks";
 import Loading from "@/components/ui/loading";
 import { parseJwt, getClientSideCookie } from "@/libs/auth";
+import FasilitasDTO from "@/interfaces/fasilitasDTO";
 
 export default function AddHarga() {
     const router = useRouter();
-    const [fasilitas, setFasilitas] = useState([]);
+    const [fasilitas, setFasilitas] = useState<FasilitasDTO[]>([]);
     const [loading, setLoading] = useState(true);
     const [harga, setHarga] = useState({
         id_fasilitas: "",
@@ -38,6 +39,8 @@ export default function AddHarga() {
         }
 
         initialize();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleChanges = (e: any) => {

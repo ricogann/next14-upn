@@ -8,9 +8,10 @@ import { getMisc } from "@/hooks";
 import Loading from "@/components/ui/loading";
 import { parseJwt, getClientSideCookie } from "@/libs/auth";
 import { useRouter } from "next/navigation";
+import Misc from "@/interfaces/miscDTO";
 
 export default function MiscPage() {
-    const [misc, setMisc] = useState({});
+    const [misc, setMisc] = useState<Misc>();
     const [isEdit, setIsEdit] = useState(false);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
@@ -30,6 +31,8 @@ export default function MiscPage() {
             setMisc(res.data);
         }
         initialize();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <>
@@ -62,10 +65,10 @@ export default function MiscPage() {
                         </div>
                         <div className="flex flex-row items-start my-4 border-b border-[#E2E7EE]"></div>
                         <div className={`${isEdit ? "hidden" : "block"}`}>
-                            <InfoData data={misc} />
+                            {misc ? <InfoData data={misc} /> : <Loading />}
                         </div>
                         <div className={`${isEdit ? "block" : "hidden"}`}>
-                            <EditData data={misc} />
+                            {misc ? <EditData data={misc} /> : <Loading />}
                         </div>
                         <button
                             className={`bg-[#07393C] uppercase text-white font-bold py-2 px-4 rounded-xl w-[900px] mr-2 mt-10 ${

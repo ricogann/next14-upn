@@ -1,6 +1,12 @@
 import Image from "next/image";
+import React from "react";
+import Misc from "@/interfaces/miscDTO";
 
-const InfoData = ({ data }) => {
+interface Props {
+    data: Misc;
+}
+
+const InfoData: React.FC<Props> = ({ data }) => {
     return (
         <>
             <div className="flex flex-full w-[900px] overflow-hidden rounded-lg">

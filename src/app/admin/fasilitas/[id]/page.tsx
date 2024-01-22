@@ -25,14 +25,16 @@ import Pagination from "@/components/ui/pagination";
 import splitData from "@/libs";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import FasilitasDTO from "@/interfaces/fasilitasDTO";
+import BookingDTO from "@/interfaces/bookingDTO";
 
 export default function DetailFasilitasPage() {
     const pathname = usePathname();
     const id = pathname.split("/")[3];
-    const [fasilitas, setFasilitas] = useState([]);
+    const [fasilitas, setFasilitas] = useState<FasilitasDTO>();
     const [kamar, setKamar] = useState([]);
     const [historyKamar, setHistoryKamar] = useState([]);
-    const [booking, setBooking] = useState([]);
+    const [booking, setBooking] = useState<BookingDTO[]>([]);
     const [isEdit, setIsEdit] = useState(false);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(0);
@@ -63,9 +65,10 @@ export default function DetailFasilitasPage() {
 
             setLoading(false);
             const fasilitas = await getFasilitasById(id);
+            console.log(fasilitas);
             const booking = await getBookingByIdFasilitas(id);
             const filteredBooking = booking.data.filter(
-                (data) =>
+                (data: BookingDTO) =>
                     data.status === "Dikonfirmasi" ||
                     data.status === "Dibatalkan"
             );
@@ -87,9 +90,11 @@ export default function DetailFasilitasPage() {
         }
 
         initialize();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const handleActiveFasilitas = async (id: string, active: boolean) => {
+    const handleActiveFasilitas = async (id: number, active: boolean) => {
         const res = await updateActiveFasilitas(id, { active: active });
         if (res.status === true) {
             toast.success("Ubah status fasilitas berhasil!", {
@@ -149,9 +154,9 @@ export default function DetailFasilitasPage() {
                             }`}
                         >
                             <div className={`carousel w-[400px]`}>
-                                {fasilitas.foto !== undefined ? (
+                                {fasilitas && fasilitas.foto !== undefined ? (
                                     JSON.parse(fasilitas.foto).map(
-                                        (foto, index) => {
+                                        (foto: string, index: number) => {
                                             return (
                                                 <div
                                                     id={`slide${index + 1}`}
@@ -264,7 +269,7 @@ export default function DetailFasilitasPage() {
                                         }`}
                                         onClick={() =>
                                             handleActiveFasilitas(
-                                                fasilitas.id_fasilitas,
+                                                fasilitas?.id_fasilitas as number,
                                                 true
                                             )
                                         }
@@ -277,7 +282,7 @@ export default function DetailFasilitasPage() {
                                         }`}
                                         onClick={() =>
                                             handleActiveFasilitas(
-                                                fasilitas.id_fasilitas,
+                                                fasilitas?.id_fasilitas as number,
                                                 false
                                             )
                                         }

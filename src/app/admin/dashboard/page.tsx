@@ -11,14 +11,16 @@ import { getBooking, getUsers } from "@/hooks";
 import Loading from "@/components/ui/loading";
 import { parseJwt, getClientSideCookie } from "@/libs/auth";
 import { useRouter } from "next/navigation";
+import BookingDTO from "@/interfaces/bookingDTO";
+import AccountDTO from "@/interfaces/accountDTO";
 
 export default function DashboardPage() {
     const [activeTab, setActiveTab] = useState("bookings");
     const [totalBooking, setTotalBooking] = useState(0);
-    const [bookingsPending, setBookingsPending] = useState([]);
-    const [reviewBerkas, setReviewBerkas] = useState([]);
+    const [bookingsPending, setBookingsPending] = useState<BookingDTO[]>([]);
+    const [reviewBerkas, setReviewBerkas] = useState<BookingDTO[]>([]);
     const [totalUsers, setTotalUsers] = useState(0);
-    const [usersPending, setUsersPending] = useState([]);
+    const [usersPending, setUsersPending] = useState<AccountDTO[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
@@ -40,8 +42,8 @@ export default function DashboardPage() {
             }
             setLoading(false);
             const booking = await getBooking();
-            const bookingPending = booking.data.filter(
-                (item) => item.status === "Menunggu Konfirmasi"
+            const bookingPending: BookingDTO[] = booking.data.filter(
+                (item: BookingDTO) => item.status === "Menunggu Konfirmasi"
             );
             bookingPending.sort((a, b) => {
                 return (
@@ -49,8 +51,8 @@ export default function DashboardPage() {
                     new Date(a.createdAt).getTime()
                 );
             });
-            const reviewBerkas = booking.data.filter(
-                (item) => item.status === "Review Berkas"
+            const reviewBerkas: BookingDTO[] = booking.data.filter(
+                (item: BookingDTO) => item.status === "Review Berkas"
             );
             reviewBerkas.sort((a, b) => {
                 return (
@@ -59,8 +61,8 @@ export default function DashboardPage() {
                 );
             });
             const users = await getUsers();
-            const usersPending = users.data.filter(
-                (item) => item.status_account === false
+            const usersPending: AccountDTO[] = users.data.filter(
+                (item: AccountDTO) => item.status_account === false
             );
 
             setTotalBooking(booking.data.length);
@@ -71,6 +73,8 @@ export default function DashboardPage() {
         }
 
         initialize();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

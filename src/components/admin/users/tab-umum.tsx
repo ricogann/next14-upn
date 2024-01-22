@@ -1,5 +1,5 @@
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Pagination from "@/components/ui/pagination";
 import Loading from "@/components/ui/loading";
 import splitData from "@/libs";
@@ -7,11 +7,16 @@ import { decryptPassword } from "@/libs/auth";
 import { updateStatusAccount } from "@/hooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Umum from "@/interfaces/usersDTO";
 
-const TabUmum = ({ data }) => {
+interface Props {
+    data: Umum[];
+}
+
+const TabUmum: React.FC<Props> = ({ data }) => {
     const [eyeOpen, setEyeOpen] = useState(true);
     const [page, setPage] = useState(0);
-    const [dataShow, setDataShow] = useState<any[]>([]);
+    const [dataShow, setDataShow] = useState<Umum[] | any[]>([]);
     const [loading, setLoading] = useState(true);
     const [id, setId] = useState(0);
 
@@ -93,7 +98,7 @@ const TabUmum = ({ data }) => {
 
                     <div className="bg-white divide-y divide-gray-200 text-black">
                         {dataShow.length > 0 ? (
-                            dataShow[page].map((umum, index) => (
+                            dataShow[page].map((umum: Umum, index: number) => (
                                 <div className="flex" key={index}>
                                     <div className="px-6 py-4  w-[80px] text-center">
                                         {umum.id_account}

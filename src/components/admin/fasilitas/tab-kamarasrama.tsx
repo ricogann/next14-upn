@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import splitData from "@/libs";
 import Loading from "../../ui/loading";
 import { FaXmark, FaCheck } from "react-icons/fa6";
@@ -6,8 +6,14 @@ import { useRouter } from "next/navigation";
 import { updateKamar } from "@/hooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Kamar from "@/interfaces/kamarDTO";
 
-const TabKamarAsrama = ({ data, page }) => {
+interface Props {
+    data: Kamar[];
+    page: number;
+}
+
+const TabKamarAsrama: React.FC<Props> = ({ data, page }) => {
     const [kamar, setKamar] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -27,7 +33,7 @@ const TabKamarAsrama = ({ data, page }) => {
 
     const handleEdit = (
         index: number,
-        id: string,
+        id: number,
         npm_bed1_a: string,
         npm_bed2_b: string,
         npm_bed3_c: string
@@ -42,7 +48,7 @@ const TabKamarAsrama = ({ data, page }) => {
         });
     };
 
-    const handleChange = (e) => {
+    const handleChange = (e: any) => {
         setDataEdit({
             ...dataEdit,
             [e.target.name]: e.target.value,
@@ -156,7 +162,7 @@ const TabKamarAsrama = ({ data, page }) => {
             </div>
             <div className="bg-white rounded-b-lg divide-y divide-gray-200 text-black">
                 {kamar.length > 0 ? (
-                    kamar[page].map((data, index) => (
+                    kamar[page].map((data: Kamar, index: number) => (
                         <div className="flex text-center" key={index}>
                             <div className="px-6 py-3 whitespace-no-wrap w-[70px]">
                                 {index + 1}

@@ -1,8 +1,14 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import splitData from "@/libs";
 import Loading from "../../ui/loading";
+import BookingDTO from "@/interfaces/bookingDTO";
 
-const TabHistoryBooking = ({ data, page }) => {
+interface Props {
+    data: BookingDTO[];
+    page: number;
+}
+
+const TabHistoryBooking: React.FC<Props> = ({ data, page }) => {
     const [booking, setBooking] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -51,7 +57,7 @@ const TabHistoryBooking = ({ data, page }) => {
             </div>
             <div className="bg-white rounded-b-lg divide-y divide-gray-200 text-black">
                 {booking.length ? (
-                    booking[page].map((data, index) => (
+                    booking[page].map((data: BookingDTO, index: number) => (
                         <div className="flex" key={index}>
                             <div className="px-6 py-4 whitespace-no-wrap text-[15px] w-[70px]">
                                 {data.id_pemesanan}

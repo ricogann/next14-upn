@@ -1,9 +1,14 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { updateDataMisc } from "@/hooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Misc from "@/interfaces/miscDTO";
 
-const EditData = ({ data }) => {
+interface Props {
+    data: Misc;
+}
+
+const EditData: React.FC<Props> = ({ data }) => {
     const [misc, setMisc] = useState({
         id_misc: 0,
         nama_instansi: "",
@@ -13,8 +18,8 @@ const EditData = ({ data }) => {
         laman_web: "",
         nama_pic: "",
         nip_pic: "",
-        logo_instansi: null,
-        tanda_tangan: null,
+        logo_instansi: "",
+        tanda_tangan: "",
         logo_instansi_old: "",
         tanda_tangan_old: "",
     });
@@ -36,14 +41,12 @@ const EditData = ({ data }) => {
         });
     }, [data]);
 
-    const handleInput = (e) => {
+    const handleInput = (e: any) => {
         const { name, value } = e.target;
         if (name === "logo_instansi") {
             setMisc({ ...misc, [name]: e.target.files[0] });
-            // misc.logo_instansi_old = data.logo_instansi;
         } else if (name === "tanda_tangan") {
             setMisc({ ...misc, [name]: e.target.files[0] });
-            // misc.tanda_tangan_old = data.tanda_tangan;
         } else {
             setMisc({ ...misc, [name]: value });
         }

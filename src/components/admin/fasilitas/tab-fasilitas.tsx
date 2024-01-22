@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Pagination from "@/components/ui/pagination";
 import Loading from "@/components/ui/loading";
@@ -6,8 +6,13 @@ import splitData from "@/libs";
 import { deleteFasilitas } from "@/hooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import FasilitasDTO from "@/interfaces/fasilitasDTO";
 
-export default function TabFasilitas({ data }) {
+interface Props {
+    data: FasilitasDTO[];
+}
+
+const TabFasilitas: React.FC<Props> = ({ data }) => {
     const [page, setPage] = useState(0);
     const [dataShow, setDataShow] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -18,7 +23,7 @@ export default function TabFasilitas({ data }) {
         setLoading(false);
     }, [data]);
 
-    const handleDelete = async (id: string) => {
+    const handleDelete = async (id: number) => {
         const res = await deleteFasilitas(id);
 
         if (res.status === true) {
@@ -65,45 +70,49 @@ export default function TabFasilitas({ data }) {
 
                     <div className="bg-white divide-y rounded-b-lg divide-gray-200 text-black">
                         {dataShow.length > 0 ? (
-                            dataShow[page].map((data, index) => (
-                                <div
-                                    className="flex justify-between"
-                                    key={index}
-                                >
-                                    <div className="px-6 py-4 whitespace-no-wrap">
-                                        {data.id_fasilitas}
+                            dataShow[page].map(
+                                (data: FasilitasDTO, index: number) => (
+                                    <div
+                                        className="flex justify-between"
+                                        key={index}
+                                    >
+                                        <div className="px-6 py-4 whitespace-no-wrap">
+                                            {data.id_fasilitas}
+                                        </div>
+                                        <div className="px-6 py-4 whitespace-no-wrap w-[200px]">
+                                            {data.nama}
+                                        </div>
+                                        <div className="px-6 py-4 break-all w-[400px]">
+                                            {data.deskripsi}
+                                        </div>
+                                        <div className="px-6 py-4 break-all w-[300px]">
+                                            {data.alamat}
+                                        </div>
+                                        <div className="px-6 py-4 whitespace-no-wrap flex items-center justify-center w-[200px]">
+                                            <button
+                                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mr-2"
+                                                onClick={() =>
+                                                    router.push(
+                                                        `/admin/fasilitas/${data.id_fasilitas}`
+                                                    )
+                                                }
+                                            >
+                                                Detail
+                                            </button>
+                                            <button
+                                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
+                                                onClick={() =>
+                                                    handleDelete(
+                                                        data.id_fasilitas
+                                                    )
+                                                }
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div className="px-6 py-4 whitespace-no-wrap w-[200px]">
-                                        {data.nama}
-                                    </div>
-                                    <div className="px-6 py-4 break-all w-[400px]">
-                                        {data.deskripsi}
-                                    </div>
-                                    <div className="px-6 py-4 break-all w-[300px]">
-                                        {data.alamat}
-                                    </div>
-                                    <div className="px-6 py-4 whitespace-no-wrap flex items-center justify-center w-[200px]">
-                                        <button
-                                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mr-2"
-                                            onClick={() =>
-                                                router.push(
-                                                    `/admin/fasilitas/${data.id_fasilitas}`
-                                                )
-                                            }
-                                        >
-                                            Detail
-                                        </button>
-                                        <button
-                                            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
-                                            onClick={() =>
-                                                handleDelete(data.id_fasilitas)
-                                            }
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
-                                </div>
-                            ))
+                                )
+                            )
                         ) : (
                             <div className="">
                                 <div
@@ -133,4 +142,6 @@ export default function TabFasilitas({ data }) {
             </div>
         </>
     );
-}
+};
+
+export default TabFasilitas;

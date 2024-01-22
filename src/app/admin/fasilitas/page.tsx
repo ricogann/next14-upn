@@ -35,6 +35,8 @@ export default function FasilitasPage() {
         }
 
         initialize();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const toggleTab = (tab: string) => {

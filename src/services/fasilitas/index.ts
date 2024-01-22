@@ -39,7 +39,7 @@ class FasilitasApi extends CoreAPI {
         return res;
     }
 
-    async deleteFasilitas(id: string) {
+    async deleteFasilitas(id: number) {
         const res = await this.fetch(`/fasilitas/delete/${id}`, "DELETE", {
             isNeedToken: true,
         });
@@ -96,7 +96,7 @@ class FasilitasApi extends CoreAPI {
         return res;
     }
 
-    async updateActiveFasilitas(id: string, data: any) {
+    async updateActiveFasilitas(id: number, data: any) {
         const res = await this.fetch(`/fasilitas/update-active/${id}`, "PUT", {
             json: { ...data },
             isNeedToken: true,

@@ -1,4 +1,4 @@
-export default function splitData(data, dataPerPage) {
+export default function splitData(data: any[], dataPerPage: number) {
     try {
         const dataArray = [];
         let group = [];

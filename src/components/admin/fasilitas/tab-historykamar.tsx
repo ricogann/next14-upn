@@ -1,9 +1,15 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import splitData from "@/libs";
 import Loading from "../../ui/loading";
+import HistoryKamar from "@/interfaces/kamarDTO";
 
-const TabHistoryKamar = ({ data, page }) => {
-    const [kamar, setKamar] = useState<any[]>([]);
+interface Props {
+    data: HistoryKamar[];
+    page: number;
+}
+
+const TabHistoryKamar: React.FC<Props> = ({ data, page }) => {
+    const [kamar, setKamar] = useState<HistoryKamar[] | any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -46,7 +52,7 @@ const TabHistoryKamar = ({ data, page }) => {
             </div>
             <div className="bg-white rounded-b-lg divide-y divide-gray-200 text-black w-[830px]">
                 {kamar.length > 0 ? (
-                    kamar[page].map((data, index) => (
+                    kamar[page].map((data: HistoryKamar, index: number) => (
                         <div className="flex text-center" key={index}>
                             <div className="px-6 py-3 whitespace-no-wrap w-[70px]">
                                 {index + 1}

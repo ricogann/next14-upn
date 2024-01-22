@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import splitData from "@/libs";
 import FasilitasDTO from "@/interfaces/fasilitasDTO";
 import Loading from "@/components/ui/loading";
@@ -6,11 +6,17 @@ import Pagination from "@/components/ui/pagination";
 import { updateStatusBooking } from "@/hooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import BookingDTO from "@/interfaces/bookingDTO";
+import AccountDTO from "@/interfaces/accountDTO";
 
-const TabBookings = ({ data }) => {
+interface TabBookingsProps {
+    data: BookingDTO[];
+}
+
+const TabBookings: React.FC<TabBookingsProps> = ({ data }) => {
     const [loading, setLoading] = useState(true);
     const [isDecline, setIsDecline] = useState(false);
-    const [dataShow, setDataShow] = useState<FasilitasDTO[][]>([]);
+    const [dataShow, setDataShow] = useState<BookingDTO[][]>([]);
     const [page, setPage] = useState(0);
     const [id, setId] = useState(0);
     const [keterangan, setKeterangan] = useState("");
@@ -80,8 +86,6 @@ const TabBookings = ({ data }) => {
             handleSubmit(id, status, keterangan);
         }
     };
-
-    console.log(dataShow);
 
     return (
         <>

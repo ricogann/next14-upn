@@ -1,21 +1,26 @@
 interface Mahasiswa {
     nama: string;
+    no_telp: string;
 }
 
 interface Dosen {
     nama: string;
+    no_telp: string;
 }
 
 interface Umum {
     nama: string;
+    no_telp: string;
 }
 
 interface UKM {
     nama_ukm: string;
+    no_telp: string;
 }
 
 interface Organisasi {
     nama_organisasi: string;
+    no_telp: string;
 }
 
 interface Fasilitas {
@@ -45,6 +50,8 @@ export default interface BookingDTO {
     durasi: number;
     total_harga: number;
     tanggal_pemesanan: string;
+    bukti_pembayaran: string;
+    SIK: string;
     status: string;
     createdAt: string;
 }

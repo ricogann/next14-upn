@@ -53,6 +53,8 @@ export default function UsersPage() {
         }
 
         initialize();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <>

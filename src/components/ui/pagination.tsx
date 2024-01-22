@@ -1,7 +1,18 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const Pagination = ({ totalPages, currentPage, handlePage, totalData }) => {
-    const pagDisplay = (totalPages, currentPage) => {
+interface PaginationProps {
+    totalPages: number;
+    currentPage: number;
+    handlePage: (page: number) => void;
+    totalData: number;
+}
+const Pagination: React.FC<PaginationProps> = ({
+    totalPages,
+    currentPage,
+    handlePage,
+    totalData,
+}) => {
+    const pagDisplay = (totalPages: number, currentPage: number) => {
         if (totalPages <= 3) {
             return Array.from({ length: totalPages }, (_, i) => i + 1);
         } else {

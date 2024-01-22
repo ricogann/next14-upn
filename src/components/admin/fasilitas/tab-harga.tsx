@@ -1,12 +1,17 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Pagination from "@/components/ui/pagination";
 import Loading from "@/components/ui/loading";
 import splitData from "@/libs";
 import { deleteHargaFasilitas } from "@/hooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Harga from "@/interfaces/hargaDTO";
 
-export default function TabHarga({ data }) {
+interface Props {
+    data: Harga[];
+}
+
+const TabHarga: React.FC<Props> = ({ data }) => {
     const [page, setPage] = useState(0);
     const [dataShow, setDataShow] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -62,7 +67,7 @@ export default function TabHarga({ data }) {
 
                     <div className="bg-white divide-y divide-gray-200 text-black w-[870px] rounded-b-lg">
                         {dataShow.length > 0 ? (
-                            dataShow[page].map((data, index) => (
+                            dataShow[page].map((data: Harga, index: number) => (
                                 <div className="flex" key={index}>
                                     <div className="px-6 py-4 whitespace-no-wrap w-[70px]">
                                         {data.id}
@@ -126,4 +131,6 @@ export default function TabHarga({ data }) {
             </div>
         </>
     );
-}
+};
+
+export default TabHarga;

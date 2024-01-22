@@ -191,7 +191,7 @@ export const addFasilitas = async (data: any) => {
     return await fasilitasApi.addFasilitas(formData);
 };
 
-export const deleteFasilitas = async (id: string) => {
+export const deleteFasilitas = async (id: number) => {
     return await fasilitasApi.deleteFasilitas(id);
 };
 
@@ -211,6 +211,6 @@ export const updateKamar = async (id: number, data: any) => {
     return await fasilitasApi.updateDataKamar(id, data);
 };
 
-export const updateActiveFasilitas = async (id: string, data: any) => {
+export const updateActiveFasilitas = async (id: number, data: any) => {
     return await fasilitasApi.updateActiveFasilitas(id, data);
 };
