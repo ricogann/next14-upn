@@ -5,6 +5,7 @@ import { AuthButton } from "../ui/auth-button";
 import { login } from "@/hooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loading from "../ui/loading";
 
 type LoginFormProps = {
     toggle: () => void;
@@ -16,7 +17,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggle, toggleRegister }) => {
     const [npm, setNpm] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const router = useRouter();
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -31,7 +32,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggle, toggleRegister }) => {
     };
 
     const handleLogin = async () => {
+        setLoading(true);
         if (password === "") {
+            setLoading(false);
             toast.error("Data tidak boleh kosong", {
                 position: toast.POSITION.TOP_CENTER,
             });
@@ -45,6 +48,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggle, toggleRegister }) => {
             password,
         });
         if (res.status === true) {
+            setLoading(true);
             toast.success("Login berhasil", {
                 position: "top-center",
                 autoClose: 3000,
@@ -54,6 +58,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggle, toggleRegister }) => {
             });
             window.location.reload();
         } else if (res.status === false) {
+            setLoading(false);
             toast.error(res.error, {
                 position: "top-center",
                 autoClose: 3000,
@@ -67,13 +72,20 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggle, toggleRegister }) => {
     const enterPressed = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             handleLogin();
+        } else if (e.key === "Escape") {
+            toggle();
         }
     };
     return (
         <>
+            <ToastContainer />
             <div className="fixed z-50 top-0 right-0 flex items-center justify-center backdrop-blur-xl h-screen w-screen">
-                <ToastContainer />
-                <div className="p-5 bg-white rounded-xl text-black border-2 border-black shadow-xl">
+                <div className="relative p-5 bg-white rounded-xl text-black border-2 border-black shadow-xl">
+                    {loading && (
+                        <div className="absolute z-50 backdrop-blur-md flex items-center justify-center h-full w-full left-0 top-0">
+                            <Loading />
+                        </div>
+                    )}
                     <div className="flex justify-end" onClick={toggle}>
                         <AiOutlineClose className="text-2xl cursor-pointer" />
                     </div>
@@ -127,7 +139,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ toggle, toggleRegister }) => {
                         <h1 className="text-[16px] font-bold mt-7 md:text-[21px] xl:text-[18px]">
                             Lupa password?{" "}
                             <span className="text-[#07393C]">
-                                Reset Password
+                                Hubungi admin
                             </span>
                         </h1>
                     </div>

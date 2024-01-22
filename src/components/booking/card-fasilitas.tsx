@@ -4,6 +4,7 @@ import { MdPayment } from "react-icons/md";
 import { useState } from "react";
 import BookingDTO from "@/interfaces/bookingDTO";
 import FasilitasDTO from "@/interfaces/fasilitasDTO";
+import Image from "next/image";
 
 type CardFasilitasProps = {
     booking: BookingDTO[];
@@ -34,6 +35,17 @@ const CardFasilitas = ({ booking, fasilitas }: CardFasilitasProps) => {
             <div className="flex-col flex lg:gap-5 lg:flex-row-reverse">
                 <div className="bg-[#FFFFFF] flex flex-wrap rounded-[15px] xl:flex-col mr-2 mt-2">
                     <div className="p-7 flex flex-row lg:flex-col lg:items-center gap-3 xl:p-10">
+                        {fasilitas && (
+                            <Image
+                                src={`${
+                                    process.env.NEXT_PUBLIC_API_URL
+                                }/assets/${JSON.parse(fasilitas.foto)[0]}`}
+                                alt="foto"
+                                width={100}
+                                height={100}
+                                className="hidden lg:block xl:w-full xl:h-[300px] rounded-[15px]"
+                            />
+                        )}
                         <div className="flex flex-col md:mt-6 gap-3">
                             <h2 className="text-[16px] md:text-[22px] font-bold text-[#0A090C] xl:text-[35px]">
                                 {fasilitas && fasilitas.nama}
@@ -66,7 +78,7 @@ const CardFasilitas = ({ booking, fasilitas }: CardFasilitasProps) => {
                                             <div className="flex items-center gap-3">
                                                 <input
                                                     type="date"
-                                                    className="border rounded-md px-2 py-1 w-[130px] text-[12px] xl:text-[15px] xl:h-[30px] xl:w-[150px] h-8 focus:outline-none focus:border-blue-500 text-white"
+                                                    className="border rounded-md px-2 py-1 w-[130px] text-[12px] xl:text-[15px] xl:h-[30px] xl:w-[150px] h-8 focus:outline-none focus:border-blue-500 dark:[color-scheme:dark] text-black bg-[#F7F8FA] "
                                                     min={
                                                         new Date()
                                                             .toISOString()

@@ -76,7 +76,10 @@ export default function Sidebar() {
                                 key={index}
                                 onClick={() => {
                                     setLoading(true);
-                                    if (link !== menu.link.split("/")[2]) {
+                                    if (
+                                        link !== menu.link.split("/")[2] ||
+                                        path.split("/")[3]
+                                    ) {
                                         router.push(menu.link);
                                     } else {
                                         window.location.reload();

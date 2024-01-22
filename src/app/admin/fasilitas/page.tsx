@@ -119,11 +119,12 @@ export default function FasilitasPage() {
                                                 />
                                                 <button
                                                     className=" w-full bg-[#07393C] px-5 py-3.5 rounded-lg text-white font-bold uppercase"
-                                                    onClick={() =>
+                                                    onClick={() => {
+                                                        setLoading(true);
                                                         router.push(
                                                             `/admin/fasilitas/add-fasilitas`
-                                                        )
-                                                    }
+                                                        );
+                                                    }}
                                                 >
                                                     Add Data
                                                 </button>

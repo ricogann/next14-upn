@@ -49,6 +49,13 @@ const TabKamarAsrama: React.FC<Props> = ({ data, page }) => {
     };
 
     const handleChange = (e: any) => {
+        if (e.target.value === "") {
+            setDataEdit({
+                ...dataEdit,
+                [e.target.name]: null,
+            });
+            return;
+        }
         setDataEdit({
             ...dataEdit,
             [e.target.name]: e.target.value,

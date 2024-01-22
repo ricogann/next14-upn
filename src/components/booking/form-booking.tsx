@@ -47,7 +47,7 @@ const FormBooking: React.FC<FormBookingProps> = ({ booking, fasilitas }) => {
         id_fasilitas: 0,
         id_account: 0,
         id_harga: 0,
-        tanggal_pemesanan: "",
+        tanggal_pemesanan: new Date().toISOString().split("T")[0],
         jam_checkin: "00:00",
         jam_checkout: "00:00",
         durasi: 1,
@@ -73,7 +73,6 @@ const FormBooking: React.FC<FormBookingProps> = ({ booking, fasilitas }) => {
                     Number(path.split("/")[2])
                 );
 
-                console.log(harga);
                 setHarga(harga.data);
                 setPesan({
                     ...pesan,
@@ -202,8 +201,13 @@ const FormBooking: React.FC<FormBookingProps> = ({ booking, fasilitas }) => {
     };
 
     const handleSubmit = async () => {
+        setLoading(true);
         if (isLongTerm) {
-            if (pesan.keterangan === "") {
+            if (
+                pesan.keterangan === "" ||
+                (fasilitas?.nama === "Asrama" && pesan.tanggal_pemesanan === "")
+            ) {
+                setLoading(false);
                 toast.error("Mohon isi semua form!", {
                     position: "top-center",
                     autoClose: 3000,
@@ -213,10 +217,12 @@ const FormBooking: React.FC<FormBookingProps> = ({ booking, fasilitas }) => {
                 });
                 return;
             }
+
             pesan.tanggal_pemesanan = new Date().toISOString().split("T")[0];
             pesan.total_harga = pesan.harga * 2 + 250000;
             const res = await checkExpiredMahasiswa(pesan.id_account);
             if (res.status !== true) {
+                setLoading(false);
                 toast.error(
                     "Lebih dari semester 3 tidak bisa melakukan pemesanan!",
                     {
@@ -233,6 +239,7 @@ const FormBooking: React.FC<FormBookingProps> = ({ booking, fasilitas }) => {
                 idAccount: pesan.id_account,
             });
             if (kamar.status !== true || kamar === undefined) {
+                setLoading(false);
                 toast.error("Anda telah melakukan pemesanan!", {
                     position: "top-center",
                     autoClose: 3000,
@@ -251,6 +258,7 @@ const FormBooking: React.FC<FormBookingProps> = ({ booking, fasilitas }) => {
         }
 
         if (pesan.tanggal_pemesanan === "" || pesan.keterangan === "") {
+            setLoading(false);
             toast.error("Mohon isi semua form!", {
                 position: "top-center",
                 autoClose: 3000,
@@ -274,11 +282,9 @@ const FormBooking: React.FC<FormBookingProps> = ({ booking, fasilitas }) => {
                 closeOnClick: true,
                 draggable: true,
             });
-            setTimeout(() => {
-                setLoading(true);
-                router.push("/profile");
-            }, 3000);
+            router.push("/profile");
         } else {
+            setLoading(false);
             toast.error("Gagal melakukan pemesanan!", {
                 position: "top-center",
                 autoClose: 3000,
@@ -307,6 +313,14 @@ const FormBooking: React.FC<FormBookingProps> = ({ booking, fasilitas }) => {
         const duration = Number(checkout) - Number(checkin);
 
         return duration;
+    };
+
+    const enterPressed = (
+        e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
+        if (e.key === "Enter") {
+            handleSubmit();
+        }
     };
 
     return (
@@ -351,6 +365,7 @@ const FormBooking: React.FC<FormBookingProps> = ({ booking, fasilitas }) => {
                                 min={new Date().toISOString().split("T")[0]}
                                 className="text-[12px] lg:text-[14px] ml-4 rounded bg-[#fff] xl:bg-[#F7F8FA] text-[#0A090C]"
                                 onChange={handleChanges}
+                                value={pesan.tanggal_pemesanan}
                             />
                         </div>
                         <h2
@@ -635,6 +650,7 @@ const FormBooking: React.FC<FormBookingProps> = ({ booking, fasilitas }) => {
                             className="text-[12px] lg:text-[12px] ml-2 text-[#0A090C] bg-[#fff] xl:bg-[#f7f8fa] rounded w-full h-full"
                             placeholder="Saya meminjam fasilitas ini untuk..."
                             onChange={handleChanges}
+                            onKeyUp={enterPressed}
                         />
                     </div>
                 </div>

@@ -16,35 +16,47 @@ class AuthApi extends CoreAPI {
     }
 
     async loginUmum(json: any) {
-        const res = await this.fetch("/auth/login/umum", "POST", {
-            json: { ...json },
-        });
-        if (res.data.token) {
-            this.setToken({ token: res.data.token, expireable: true });
+        try {
+            const res = await this.fetch("/auth/login/umum", "POST", {
+                json: { ...json },
+            });
+            if (res.data.token) {
+                this.setToken({ token: res.data.token, expireable: true });
+            }
+            return res;
+        } catch (error) {
+            return error;
         }
-        return res;
     }
 
     async loginUkm(json: any) {
-        const res = await this.fetch("/auth/login/ukm", "POST", {
-            json: { ...json },
-        });
+        try {
+            const res = await this.fetch("/auth/login/ukm", "POST", {
+                json: { ...json },
+            });
 
-        if (res.data.token) {
-            this.setToken({ token: res.data.token, expireable: true });
+            if (res.data.token) {
+                this.setToken({ token: res.data.token, expireable: true });
+            }
+            return res;
+        } catch (error) {
+            return error;
         }
-        return res;
     }
 
     async loginOrganisasi(json: any) {
-        const res = await this.fetch("/auth/login/organisasi", "POST", {
-            json: { ...json },
-        });
+        try {
+            const res = await this.fetch("/auth/login/organisasi", "POST", {
+                json: { ...json },
+            });
 
-        if (res.data.token) {
-            this.setToken({ token: res.data.token, expireable: true });
+            if (res.data.token) {
+                this.setToken({ token: res.data.token, expireable: true });
+            }
+            return res;
+        } catch (error) {
+            return error;
         }
-        return res;
     }
 
     async loginAdmin(json: any) {
@@ -74,27 +86,39 @@ class AuthApi extends CoreAPI {
     }
 
     async registerUmum(formData: any) {
-        const res = await this.fetch("/auth/register/umum", "POST", {
-            body: formData,
-        });
+        try {
+            const res = await this.fetch("/auth/register/umum", "POST", {
+                body: formData,
+            });
 
-        return res;
+            return res;
+        } catch (error) {
+            return error;
+        }
     }
 
     async registerUkm(formData: any) {
-        const res = await this.fetch("/auth/register/ukm", "POST", {
-            body: formData,
-        });
+        try {
+            const res = await this.fetch("/auth/register/ukm", "POST", {
+                body: formData,
+            });
 
-        return res;
+            return res;
+        } catch (error) {
+            return error;
+        }
     }
 
     async registerOrganisasi(formData: any) {
-        const res = await this.fetch("/auth/register/organisasi", "POST", {
-            body: formData,
-        });
+        try {
+            const res = await this.fetch("/auth/register/organisasi", "POST", {
+                body: formData,
+            });
 
-        return res;
+            return res;
+        } catch (error) {
+            return error;
+        }
     }
 }
 

@@ -24,6 +24,7 @@ const TabFasilitas: React.FC<Props> = ({ data }) => {
     }, [data]);
 
     const handleDelete = async (id: number) => {
+        setLoading(true);
         const res = await deleteFasilitas(id);
 
         if (res.status === true) {
@@ -36,6 +37,7 @@ const TabFasilitas: React.FC<Props> = ({ data }) => {
             });
             window.location.reload();
         } else {
+            setLoading(false);
             toast.error(res.message, {
                 position: "top-center",
                 autoClose: 3000,
@@ -47,6 +49,11 @@ const TabFasilitas: React.FC<Props> = ({ data }) => {
     };
     return (
         <>
+            {loading && (
+                <div className="fixed z-50 w-screen h-screen flex items-center justify-center top-0 left-0 overflow-hidden backdrop-blur-md">
+                    <Loading />
+                </div>
+            )}
             <ToastContainer />
             <div className="flex flex-wrap overflow-hidden rounded-lg shadow-lg">
                 <div className="min-w-full rounded-lg overflow-hidden">
@@ -91,21 +98,22 @@ const TabFasilitas: React.FC<Props> = ({ data }) => {
                                         <div className="px-6 py-4 whitespace-no-wrap flex items-center justify-center w-[200px]">
                                             <button
                                                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mr-2"
-                                                onClick={() =>
+                                                onClick={() => {
+                                                    setLoading(true);
                                                     router.push(
                                                         `/admin/fasilitas/${data.id_fasilitas}`
-                                                    )
-                                                }
+                                                    );
+                                                }}
                                             >
                                                 Detail
                                             </button>
                                             <button
                                                 className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
-                                                onClick={() =>
+                                                onClick={() => {
                                                     handleDelete(
                                                         data.id_fasilitas
-                                                    )
-                                                }
+                                                    );
+                                                }}
                                             >
                                                 Delete
                                             </button>

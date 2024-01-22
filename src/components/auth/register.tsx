@@ -1,10 +1,8 @@
 import { useState, useEffect, ChangeEvent } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
 import { AiOutlineClose } from "react-icons/ai";
 import { AuthButton } from "../ui/auth-button";
 import Loading from "../ui/loading";
+import { Fakultas, Prodi, TahunAjaran } from "@/interfaces/campusDTO";
 
 import { getFakultas, getProdi, getTahunAjaran, registration } from "@/hooks";
 
@@ -16,8 +14,13 @@ type RegisterFormProps = {
 const RegisterForm: React.FC<RegisterFormProps> = ({ toggle, toggleLogin }) => {
     const [role, setRole] = useState("mahasiswa");
     const [fakultas, setFakultas] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [prodi, setProdi] = useState([]);
     const [tahunAjaran, setTahunAjaran] = useState([]);
+    const [error, setError] = useState({
+        status: false,
+        message: "",
+    });
     const [register, setRegister] = useState({
         npm: "",
         nik: "",
@@ -73,29 +76,32 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle, toggleLogin }) => {
     };
 
     const handleRegis = async () => {
+        setLoading(true);
         if (
             register.npm === "" ||
-            register.nik === "" ||
             register.nama === "" ||
             register.email === "" ||
             register.password === "" ||
             register.no_telp === "" ||
-            register.nama_pj === "" ||
             register.bukti === null
         ) {
-            toast.error("Mohon isi semua data", {
-                position: toast.POSITION.TOP_CENTER,
+            setLoading(false);
+            setError({
+                status: true,
+                message: "Data tidak boleh kosong",
             });
             return;
         }
         const res = await registration(register, role);
         if (res.status === true) {
-            toast.success("Registrasi berhasil", {
-                position: toast.POSITION.TOP_CENTER,
-            });
+            setLoading(false);
+            toggle();
+            toggleLogin();
         } else {
-            toast.error(res.error, {
-                position: toast.POSITION.TOP_CENTER,
+            setLoading(false);
+            setError({
+                status: true,
+                message: res.error,
             });
         }
     };
@@ -103,13 +109,19 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle, toggleLogin }) => {
     const enterPressed = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             handleRegis();
+        } else if (e.key === "Escape") {
+            toggle();
         }
     };
     return (
         <>
-            <ToastContainer />
             <div className="fixed z-50 top-0 left-0 flex items-center justify-center backdrop-blur-xl h-screen w-screen">
-                <div className="p-6 h-[500px] overflow-auto text-black relative bg-white rounded-xl border-2 border-black shadow-xl">
+                <div className="p-6 h-[500px] xl:w-[500px] overflow-auto text-black relative bg-white rounded-xl border-2 border-black shadow-xl">
+                    {loading && (
+                        <div className="fixed z-50 backdrop-blur-sm h-full w-full top-0 left-0 flex items-center justify-center">
+                            <Loading />
+                        </div>
+                    )}
                     <div className="flex justify-end" onClick={toggle}>
                         <AiOutlineClose className="text-2xl cursor-pointer" />
                     </div>
@@ -119,7 +131,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle, toggleLogin }) => {
                     <div className="mt-5">
                         <h1 className="text-[17px] mb-1">Daftar Sebagai</h1>
                         <select
-                            className="bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]"
+                            className="bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px] xl:w-[430px]"
                             onChange={(e) => setRole(e.target.value)}
                         >
                             <option value="mahasiswa">Mahasiswa</option>
@@ -145,26 +157,36 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle, toggleLogin }) => {
                             <input
                                 name={`npm`}
                                 type="text"
-                                className={`bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px] ${
+                                className={`bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px] xl:w-[430px] ${
                                     role === "ukm" ||
                                     role === "organisasi" ||
                                     role === "umum"
                                         ? "hidden"
                                         : "block"
+                                } ${
+                                    error.status && register.npm === ""
+                                        ? "border-red-500"
+                                        : "border-black"
                                 }`}
                                 onChange={handleChange}
+                                onKeyUp={enterPressed}
                             />
                             <input
                                 name={`nik`}
                                 type="text"
-                                className={`  bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px] ${
+                                className={`  bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px] xl:w-[430px] ${
                                     role === "ukm" ||
                                     role === "organisasi" ||
                                     role === "mahasiswa"
                                         ? "hidden"
                                         : "block"
+                                } ${
+                                    error.status && register.nik === ""
+                                        ? "border-red-500"
+                                        : "border-black"
                                 }`}
                                 onChange={handleChange}
+                                onKeyUp={enterPressed}
                             />
                         </div>
 
@@ -179,8 +201,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle, toggleLogin }) => {
                             <input
                                 name={`nama`}
                                 type="text"
-                                className={`bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]`}
+                                className={`bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px] xl:w-[430px] ${
+                                    error.status && register.nama === ""
+                                        ? "border-red-500"
+                                        : "border-black"
+                                }`}
                                 onChange={handleChange}
+                                onKeyUp={enterPressed}
                             />
                         </div>
 
@@ -189,8 +216,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle, toggleLogin }) => {
                             <input
                                 name={`email`}
                                 type="email"
-                                className={` bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]`}
+                                className={` bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px] xl:w-[430px] ${
+                                    error.status && register.email === ""
+                                        ? "border-red-500"
+                                        : "border-black"
+                                }`}
                                 onChange={handleChange}
+                                onKeyUp={enterPressed}
                             />
                         </div>
 
@@ -199,8 +231,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle, toggleLogin }) => {
                             <input
                                 name={`password`}
                                 type="password"
-                                className={`bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]`}
+                                className={`bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px] xl:w-[430px] ${
+                                    error.status && register.password === ""
+                                        ? "border-red-500"
+                                        : "border-black"
+                                }`}
                                 onChange={handleChange}
+                                onKeyUp={enterPressed}
                             />
                         </div>
 
@@ -213,17 +250,19 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle, toggleLogin }) => {
                                 <h1 className="text-[20px] mb-1">fakultas</h1>
                                 <select
                                     name="fakultas"
-                                    className="bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]"
+                                    className="bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px] xl:w-[430px]"
                                     onChange={handleSelectChange}
                                 >
-                                    {fakultas.map((fakultas, index) => (
-                                        <option
-                                            key={index}
-                                            value={fakultas.id_fakultas}
-                                        >
-                                            {fakultas.nama_fakultas}
-                                        </option>
-                                    ))}
+                                    {fakultas.map(
+                                        (fakultas: Fakultas, index) => (
+                                            <option
+                                                key={index}
+                                                value={fakultas.id_fakultas}
+                                            >
+                                                {fakultas.nama_fakultas}
+                                            </option>
+                                        )
+                                    )}
                                 </select>
                             </div>
 
@@ -231,10 +270,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle, toggleLogin }) => {
                                 <h1 className="text-[20px] mb-1">jurusan</h1>
                                 <select
                                     name="prodi"
-                                    className="bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]"
+                                    className="bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px] xl:w-[430px]"
                                     onChange={handleSelectChange}
                                 >
-                                    {prodi.map((prodi, index) => (
+                                    {prodi.map((prodi: Prodi, index) => (
                                         <option
                                             key={index}
                                             value={prodi.id_prodi}
@@ -252,11 +291,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle, toggleLogin }) => {
                                 {
                                     <select
                                         name="tahun_ajaran"
-                                        className="bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]"
+                                        className="bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px] xl:w-[430px]"
                                         onChange={handleSelectChange}
                                     >
                                         {tahunAjaran.map(
-                                            (tahunAjaran, index) => (
+                                            (
+                                                tahunAjaran: TahunAjaran,
+                                                index
+                                            ) => (
                                                 <option
                                                     key={index}
                                                     value={
@@ -277,8 +319,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle, toggleLogin }) => {
                             <input
                                 name={`no_telp`}
                                 type="text"
-                                className={`bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]`}
+                                className={`bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px] xl:w-[430px] ${
+                                    error.status && register.no_telp === ""
+                                        ? "border-red-500"
+                                        : "border-black"
+                                }`}
                                 onChange={handleChange}
+                                onKeyUp={enterPressed}
                             />
                         </div>
 
@@ -295,8 +342,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle, toggleLogin }) => {
                             <input
                                 name={`nama-pj`}
                                 type="text"
-                                className={`bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]`}
+                                className={`bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px] xl:w-[430px] ${
+                                    error.status && register.nama_pj === ""
+                                        ? "border-red-500"
+                                        : "border-black"
+                                }`}
                                 onChange={handleChange}
+                                onKeyUp={enterPressed}
                             />
                         </div>
 
@@ -331,11 +383,23 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle, toggleLogin }) => {
                             <input
                                 name={`bukti`}
                                 type="file"
-                                className={` bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px]`}
+                                className={` bg-[#ffffff] border-[2px] border-black p-2 drop-shadow-xl rounded-[13px] w-[300px] xl:w-[430px] ${
+                                    error.status && register.bukti === null
+                                        ? "border-red-500"
+                                        : "border-black"
+                                }`}
                                 onChange={handleFileChange}
+                                onKeyUp={enterPressed}
                             />
                         </div>
                     </div>
+                    <h1
+                        className={`mt-5 text-red-500 text-[18px] font-bold ${
+                            error.status ? "block" : "hidden"
+                        }`}
+                    >
+                        {error.message}
+                    </h1>
                     <div className="mt-5" onClick={handleRegis}>
                         <AuthButton message="Registrasi" />
                     </div>
