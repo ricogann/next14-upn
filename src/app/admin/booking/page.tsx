@@ -10,11 +10,13 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { parseJwt, getClientSideCookie } from "@/libs/auth";
 import { useRouter } from "next/navigation";
+import BookingDTO from "@/interfaces/bookingDTO";
 
 export default function BookingPage() {
-    const [bookings, setBookings] = useState<any[]>([]);
+    const [bookings, setBookings] = useState<BookingDTO[]>([]);
     const [isDecline, setIsDecline] = useState(false);
-    const [booking, setBooking] = useState<any[]>([]);
+    const [booking, setBooking] = useState<BookingDTO[][]>([]);
+    const [bookingFiltered, setBookingFiltered] = useState<BookingDTO[][]>([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(0);
     const [id, setId] = useState(0);
@@ -34,7 +36,7 @@ export default function BookingPage() {
             }
             setLoading(false);
             const booking = await getBooking();
-            booking.data.sort((a, b) => {
+            booking.data.sort((a: BookingDTO, b: BookingDTO) => {
                 return (
                     new Date(b.createdAt).getTime() -
                     new Date(a.createdAt).getTime()
@@ -46,6 +48,8 @@ export default function BookingPage() {
             setLoading(false);
         }
         initialize();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -75,11 +79,10 @@ export default function BookingPage() {
                         return value.tanggal_pemesanan
                             .toLowerCase()
                             .includes(searchText.toLowerCase());
-                    } else if (value && "Fasilitas" in value) {
-                        console.log(value.Fasilitas);
-                        return value.Fasilitas.toLowerCase().includes(
-                            searchText.toLowerCase()
-                        );
+                    } else if (value && "Fasilitas.nama" in value) {
+                        return value.Fasilitas.nama
+                            .toLowerCase()
+                            .includes(searchText.toLowerCase());
                     } else if (value && "id_pemesanan" in value) {
                         return value.id_pemesanan
                             .toLowerCase()
@@ -90,9 +93,9 @@ export default function BookingPage() {
             })
         );
 
-        setBooking(splitData(filteredData, 6));
+        setBookingFiltered(splitData(filteredData, 6));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [bookings, searchText]);
+    }, [booking, searchText]);
 
     const handleTextArea = (e: any) => {
         setKeterangan(e.target.value);
@@ -231,8 +234,8 @@ export default function BookingPage() {
                                 </div>
                             </div>
                             <div className="bg-white rounded-b-lg divide-y divide-gray-200 text-black">
-                                {booking.length > 0 ? (
-                                    booking[page].map((data, index) => (
+                                {bookingFiltered.length > 0 ? (
+                                    bookingFiltered[page].map((data, index) => (
                                         <div className="flex" key={index}>
                                             <div className="px-6 py-4 whitespace-no-wrap text-[15px] w-[70px]">
                                                 {data.id_pemesanan}
@@ -480,7 +483,7 @@ export default function BookingPage() {
                                 )}
                             </div>
                             <Pagination
-                                totalPages={booking.length}
+                                totalPages={bookingFiltered.length}
                                 currentPage={page + 1}
                                 handlePage={setPage}
                                 totalData={bookings.length}

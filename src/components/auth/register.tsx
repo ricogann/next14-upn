@@ -388,6 +388,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ toggle, toggleLogin }) => {
                                         ? "border-red-500"
                                         : "border-black"
                                 }`}
+                                accept="image/*"
                                 onChange={handleFileChange}
                                 onKeyUp={enterPressed}
                             />

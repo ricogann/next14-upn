@@ -11,6 +11,8 @@ import { getFasilitasById, getBooking } from "@/hooks";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/ui/loading";
 
+import { parseJwt, getClientSideCookie } from "@/libs/auth";
+
 export default function Booking() {
     const path = usePathname();
     const [fasilitas, setFasilitas] = useState<FasilitasDTO>();
@@ -20,6 +22,14 @@ export default function Booking() {
 
     useEffect(() => {
         async function initialize() {
+            const cookie = getClientSideCookie();
+            if (cookie.token === undefined) {
+                router.push("/");
+                return;
+            } else if (!parseJwt(cookie.token).role) {
+                router.push("/");
+                return;
+            }
             const fasilitas = await getFasilitasById(path.split("/")[2]);
             const booking = await getBooking();
 

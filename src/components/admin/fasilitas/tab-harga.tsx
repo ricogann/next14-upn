@@ -5,6 +5,7 @@ import splitData from "@/libs";
 import { deleteHargaFasilitas } from "@/hooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
 import Harga from "@/interfaces/hargaDTO";
 
 interface Props {
@@ -15,6 +16,7 @@ const TabHarga: React.FC<Props> = ({ data }) => {
     const [page, setPage] = useState(0);
     const [dataShow, setDataShow] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         setDataShow(splitData(data, 6));
@@ -44,6 +46,11 @@ const TabHarga: React.FC<Props> = ({ data }) => {
     };
     return (
         <>
+            {loading && (
+                <div className="fixed z-50 w-screen h-screen flex items-center justify-center top-0 left-0 overflow-hidden backdrop-blur-md">
+                    <Loading />
+                </div>
+            )}
             <ToastContainer />
             <div className="flex flex-wrap overflow-hidden rounded-lg">
                 <div className="rounded-lg overflow-hidden">
@@ -88,7 +95,15 @@ const TabHarga: React.FC<Props> = ({ data }) => {
                                             )}
                                     </div>
                                     <div className="px-6 py-4 whitespace-no-wrap flex items-center justify-center w-[200px]">
-                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mr-2">
+                                        <button
+                                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mr-2"
+                                            onClick={() => {
+                                                setLoading(true);
+                                                router.push(
+                                                    `/admin/fasilitas/edit-harga/${data.id}`
+                                                );
+                                            }}
+                                        >
                                             Edit
                                         </button>
                                         <button

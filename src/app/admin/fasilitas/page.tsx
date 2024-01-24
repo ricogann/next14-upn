@@ -9,13 +9,22 @@ import { getAllHargaFasilitas, getFasilitas } from "@/hooks";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/ui/loading";
 import { parseJwt, getClientSideCookie } from "@/libs/auth";
+import FasilitasDTO from "@/interfaces/fasilitasDTO";
+import Harga from "@/interfaces/hargaDTO";
 
 export default function FasilitasPage() {
     const [activeTab, setActiveTab] = useState("fasilitas");
-    const [fasilitas, setFasilitas] = useState([]);
-    const [harga, setHarga] = useState([]);
+    const [fasilitas, setFasilitas] = useState<FasilitasDTO[]>([]);
+    const [fasilitasFiltered, setFasilitasFiltered] = useState<FasilitasDTO[]>(
+        []
+    );
+    const [harga, setHarga] = useState<Harga[]>([]);
+    const [hargaFiltered, setHargaFiltered] = useState<Harga[]>([]);
+    const [searchTextFasilitas, setSearchTextFasilitas] = useState("");
+    const [searchTextHarga, setSearchTextHarga] = useState("");
     const [loading, setLoading] = useState(true);
     const router = useRouter();
+    console.log(searchTextFasilitas);
 
     useEffect(() => {
         async function initialize() {
@@ -38,6 +47,53 @@ export default function FasilitasPage() {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        const filteredData = fasilitas.filter((item) =>
+            Object.values(item).some(
+                (value) =>
+                    typeof value === "string" &&
+                    value
+                        .toLowerCase()
+                        .includes(searchTextFasilitas.toLowerCase())
+            )
+        );
+
+        setFasilitasFiltered(filteredData);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fasilitas, searchTextFasilitas]);
+
+    useEffect(() => {
+        const filteredData = harga.filter((item) =>
+            Object.values(item).some((value) => {
+                if (
+                    typeof value === "string" ||
+                    typeof value === "number" ||
+                    value instanceof Date
+                ) {
+                    const stringValue =
+                        typeof value === "string" ? value : String(value);
+
+                    return stringValue
+                        .toLowerCase()
+                        .includes(searchTextHarga.toLowerCase());
+                } else {
+                    if (value && "id" in value) {
+                        return value.id
+                            .toLowerCase()
+                            .includes(searchTextHarga.toLowerCase());
+                    } else if (value && "nama" in value) {
+                        return value.nama
+                            .toLowerCase()
+                            .includes(searchTextHarga.toLowerCase());
+                    }
+                }
+            })
+        );
+
+        setHargaFiltered(filteredData);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [harga, searchTextHarga]);
 
     const toggleTab = (tab: string) => {
         setActiveTab(tab);
@@ -116,6 +172,11 @@ export default function FasilitasPage() {
                                                     className="w-auto h-[50px] px-5 py-3 bg-white border border-gray-300 rounded-xl text-[20px] font-bold outline-none"
                                                     type="text"
                                                     placeholder="Cari Data Fasilitas . . ."
+                                                    onChange={(e) =>
+                                                        setSearchTextFasilitas(
+                                                            e.target.value
+                                                        )
+                                                    }
                                                 />
                                                 <button
                                                     className=" w-full bg-[#07393C] px-5 py-3.5 rounded-lg text-white font-bold uppercase"
@@ -136,14 +197,20 @@ export default function FasilitasPage() {
                                                     className="w-auto h-[50px] px-5 py-3 bg-white border border-gray-300 rounded-xl text-[20px] font-bold outline-none"
                                                     type="text"
                                                     placeholder="Cari Data Harga. . ."
+                                                    onChange={(e) =>
+                                                        setSearchTextHarga(
+                                                            e.target.value
+                                                        )
+                                                    }
                                                 />
                                                 <button
                                                     className=" w-full bg-[#07393C] px-5 py-3.5 rounded-lg text-white font-bold uppercase"
-                                                    onClick={() =>
+                                                    onClick={() => {
+                                                        setLoading(true);
                                                         router.push(
                                                             `/admin/fasilitas/add-harga`
-                                                        )
-                                                    }
+                                                        );
+                                                    }}
                                                 >
                                                     Add Data
                                                 </button>
@@ -157,9 +224,11 @@ export default function FasilitasPage() {
                             {
                                 {
                                     fasilitas: (
-                                        <TabFasilitas data={fasilitas} />
+                                        <TabFasilitas
+                                            data={fasilitasFiltered}
+                                        />
                                     ),
-                                    harga: <TabHarga data={harga} />,
+                                    harga: <TabHarga data={hargaFiltered} />,
                                 }[activeTab]
                             }
                         </div>

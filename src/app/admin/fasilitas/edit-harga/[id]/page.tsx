@@ -85,6 +85,12 @@ export default function EditHarga() {
             });
         }
     };
+
+    const enterPressed = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            handleSubmit();
+        }
+    };
     return (
         <>
             <ToastContainer />
@@ -109,10 +115,10 @@ export default function EditHarga() {
                     <div className="p-10 text-white">
                         <div className="flex flex-col items-start justify-center">
                             <h1 className="text-[45px] font-bold">
-                                Form Tambah Fasilitas
+                                Form Edit Harga Fasilitas
                             </h1>
                             <h4 className="text-[15px] font-regular mb-5 text-dark-whiteText">
-                                Form digunakan untuk menambah fasilitas baru
+                                Form digunakan untuk mengubah harga fasilitas
                             </h4>
                         </div>
                         <div className="flex flex-row items-start mb-5 border-b border-[#E2E7EE]">
@@ -120,7 +126,7 @@ export default function EditHarga() {
                                 <h2
                                     className={`text-[18] font-regular mb-3 mr-14 border-b-2 border-[#FFA101] font-bold"`}
                                 >
-                                    Form Tambah Fasilitas
+                                    Form Edit Harga
                                 </h2>
                             </button>
                         </div>
@@ -143,6 +149,7 @@ export default function EditHarga() {
                                             placeholder="Nama..."
                                             value={harga.nama}
                                             onChange={handleChanges}
+                                            onKeyUp={enterPressed}
                                         />
                                         <input
                                             name="harga"
@@ -151,6 +158,7 @@ export default function EditHarga() {
                                             placeholder="Harga..."
                                             value={harga.harga}
                                             onChange={handleChanges}
+                                            onKeyUp={enterPressed}
                                         />
                                     </div>
 
