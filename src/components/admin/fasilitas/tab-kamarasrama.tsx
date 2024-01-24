@@ -7,14 +7,24 @@ import { updateKamar } from "@/hooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Kamar from "@/interfaces/kamarDTO";
+import Pagination from "@/components/ui/pagination";
 
 interface Props {
     data: Kamar[];
     page: number;
+    currentPage: number;
+    handlePage: (page: number) => void;
 }
 
-const TabKamarAsrama: React.FC<Props> = ({ data, page }) => {
-    const [kamar, setKamar] = useState<any[]>([]);
+const TabKamarAsrama: React.FC<Props> = ({
+    data,
+    page,
+    currentPage,
+    handlePage,
+}) => {
+    const [kamar, setKamar] = useState<Kamar[][]>([]);
+    const [filteredKamar, setFilteredKamar] = useState<Kamar[][]>([]);
+    const [searchText, setSearchText] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(true);
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [indexEdit, setIndexEdit] = useState<number>(0);
@@ -47,6 +57,54 @@ const TabKamarAsrama: React.FC<Props> = ({ data, page }) => {
             npm_bed3_c,
         });
     };
+
+    useEffect(() => {
+        const filteredData = data.filter((item) =>
+            Object.values(item).some((value) => {
+                if (
+                    typeof value === "string" ||
+                    typeof value === "number" ||
+                    value instanceof Date
+                ) {
+                    const stringValue =
+                        typeof value === "string" ? value : String(value);
+
+                    return stringValue
+                        .toLowerCase()
+                        .includes(searchText.toLowerCase());
+                } else if (value && typeof value === "object") {
+                    if ("no_kamar" in value) {
+                        return value.no_kamar
+                            .toLowerCase()
+                            .includes(searchText.toLowerCase());
+                    } else if ("npm_bed1_a" in value) {
+                        return value.npm_bed1_a
+                            .toLowerCase()
+                            .includes(searchText.toLowerCase());
+                    } else if ("npm_bed2_b" in value) {
+                        return value.npm_bed2_b
+                            .toLowerCase()
+                            .includes(searchText.toLowerCase());
+                    } else if ("npm_bed3_c" in value) {
+                        return value.npm_bed3_c
+                            .toLowerCase()
+                            .includes(searchText.toLowerCase());
+                    } else if ("nama" in value) {
+                        return value.nama
+                            .toLowerCase()
+                            .includes(searchText.toLowerCase());
+                    } else {
+                        return false;
+                    }
+                }
+                return false;
+            })
+        );
+
+        setFilteredKamar(splitData(filteredData, 6));
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [kamar, searchText]);
 
     const handleChange = (e: any) => {
         if (e.target.value === "") {
@@ -136,6 +194,7 @@ const TabKamarAsrama: React.FC<Props> = ({ data, page }) => {
                         className="w-auto h-[50px] px-5 py-3 bg-white border border-gray-300 rounded-xl text-[20px] font-bold outline-none"
                         type="text"
                         placeholder="Cari Data Booking . . ."
+                        onChange={(e) => setSearchText(e.target.value)}
                     />
                 </div>
             </div>
@@ -168,8 +227,8 @@ const TabKamarAsrama: React.FC<Props> = ({ data, page }) => {
                 </div>
             </div>
             <div className="bg-white rounded-b-lg divide-y divide-gray-200 text-black">
-                {kamar.length > 0 ? (
-                    kamar[page].map((data: Kamar, index: number) => (
+                {filteredKamar.length > 0 ? (
+                    filteredKamar[page].map((data: Kamar, index: number) => (
                         <div className="flex text-center" key={index}>
                             <div className="px-6 py-3 whitespace-no-wrap w-[70px]">
                                 {index + 1}
@@ -316,6 +375,14 @@ const TabKamarAsrama: React.FC<Props> = ({ data, page }) => {
                         </div>
                     </div>
                 )}
+            </div>
+            <div className="mb-10">
+                <Pagination
+                    totalPages={filteredKamar.length}
+                    currentPage={currentPage}
+                    handlePage={handlePage}
+                    totalData={data.length}
+                />
             </div>
         </>
     );

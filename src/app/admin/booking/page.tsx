@@ -75,18 +75,33 @@ export default function BookingPage() {
                         return value.total_harga
                             .toLowerCase()
                             .includes(searchText.toLowerCase());
-                    } else if (value && "tanggal_pemesanan" in value) {
-                        return value.tanggal_pemesanan
+                    } else if (value && "nama" in value) {
+                        return value.nama
                             .toLowerCase()
                             .includes(searchText.toLowerCase());
-                    } else if (value && "Fasilitas.nama" in value) {
-                        return value.Fasilitas.nama
-                            .toLowerCase()
-                            .includes(searchText.toLowerCase());
-                    } else if (value && "id_pemesanan" in value) {
-                        return value.id_pemesanan
-                            .toLowerCase()
-                            .includes(searchText.toLowerCase());
+                    } else if (
+                        (value && "Mahasiswa" in value) ||
+                        (value && "UKM" in value) ||
+                        (value && "Umum" in value) ||
+                        (value && "Organisasi" in value)
+                    ) {
+                        if (value.Mahasiswa.length > 0) {
+                            return value.Mahasiswa[0].nama
+                                .toLowerCase()
+                                .includes(searchText.toLowerCase());
+                        } else if (value.UKM.length > 0) {
+                            return value.UKM[0].nama_ukm
+                                .toLowerCase()
+                                .includes(searchText.toLowerCase());
+                        } else if (value.Umum.length > 0) {
+                            return value.Umum[0].nama
+                                .toLowerCase()
+                                .includes(searchText.toLowerCase());
+                        } else if (value.Organisasi.length > 0) {
+                            return value.Organisasi[0].nama_organisasi
+                                .toLowerCase()
+                                .includes(searchText.toLowerCase());
+                        }
                     }
                 }
                 return false;
@@ -194,7 +209,7 @@ export default function BookingPage() {
                                 </h2>
                             </div>
                             <div className="flex flex-col overflow-hidden rounded-lg">
-                                <div className="flex flex-row relative overflow-hidden mb-5">
+                                <div className="flex flex-row relative overflow-hidden mb-2">
                                     <input
                                         className="w-auto h-[50px] px-5 py-3 bg-white border border-gray-300 rounded-xl text-[20px] font-bold outline-none"
                                         type="text"
@@ -205,6 +220,10 @@ export default function BookingPage() {
                                     />
                                 </div>
                             </div>
+                            <h1 className="text-[13px] mb-5">
+                                *Dapat mencari nama fasilitas, nama penyewa,
+                                status, dan total harga
+                            </h1>
                             <div className="divide-y divide-gray-200">
                                 <div className="flex">
                                     <h1 className="px-6 py-3 bg-[#07393C] text-center text-xs leading-4 font-medium text-white uppercase tracking-wider w-[70px] rounded-tl-xl">

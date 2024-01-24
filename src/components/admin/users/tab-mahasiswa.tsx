@@ -17,13 +17,29 @@ const TabMahasiswa: React.FC<Props> = ({ data }) => {
     const [eyeOpen, setEyeOpen] = useState(true);
     const [page, setPage] = useState(0);
     const [dataShow, setDataShow] = useState<any[]>([]);
+    const [dataFiltered, setDataFiltered] = useState<any[][]>([]);
     const [loading, setLoading] = useState(true);
     const [id, setId] = useState(0);
+    const [searchText, setSearchText] = useState("");
 
     useEffect(() => {
         setDataShow(splitData(data, 3));
         setLoading(false);
     }, [data]);
+
+    useEffect(() => {
+        const filteredDataMahasiswa = data.filter((item) =>
+            Object.values(item).some(
+                (value) =>
+                    typeof value === "string" &&
+                    value.toLowerCase().includes(searchText.toLowerCase())
+            )
+        );
+
+        setDataFiltered(splitData(filteredDataMahasiswa, 3));
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dataShow, searchText]);
 
     const handleUpdateStatus = async (
         id: number,
@@ -63,7 +79,8 @@ const TabMahasiswa: React.FC<Props> = ({ data }) => {
                 <input
                     className="w-auto h-[50px] px-5 py-3 bg-white border border-gray-300 rounded-xl text-[20px] font-bold outline-none"
                     type="text"
-                    placeholder="Cari Users Umum. . ."
+                    placeholder="Cari Users Mahasiswa. . ."
+                    onChange={(e) => setSearchText(e.target.value)}
                 />
                 <div className="min-w-full overflow-hidden">
                     <div className="flex mt-5">
@@ -97,8 +114,8 @@ const TabMahasiswa: React.FC<Props> = ({ data }) => {
                     </div>
                 </div>
                 <div className="flex flex-col rounded-b-lg bg-white divide-y divide-gray-200 text-black">
-                    {dataShow.length > 0 ? (
-                        dataShow[page].map(
+                    {dataFiltered.length > 0 ? (
+                        dataFiltered[page].map(
                             (mahasiswa: Mahasiswa, index: number) => (
                                 <div className="flex" key={index}>
                                     <div className="px-6 py-4 w-[50px]">
@@ -157,6 +174,7 @@ const TabMahasiswa: React.FC<Props> = ({ data }) => {
                                     <div className="px-6 py-4 text-[15px] w-[150px] ">
                                         <a
                                             href={`https://wa.me/${mahasiswa.no_telp}?text=Halo%20${mahasiswa.nama}Halo,%20saya%20adalah%20admin%20dari%20BPU%20UPN%20VETERAN%20JAWA%20TIMUR.%20Kami%20senang%20bisa%20berhubungan%20dengan%20Anda%20melalui%20WhatsApp.%20Jangan%20ragu%20untuk%20menghubungi%20kami%20jika%20Anda%20membutuhkan%20bantuan,%20informasi,%20atau%20pertanyaan%20lainnya%20terkait%20dengan%20UPN%20VETERAN%20JAWA%20TIMUR.%20Terima%20kasih!"`}
+                                            target="_blank"
                                         >
                                             {mahasiswa.no_telp}
                                         </a>
@@ -226,7 +244,7 @@ const TabMahasiswa: React.FC<Props> = ({ data }) => {
                 </div>
             </div>
             <Pagination
-                totalPages={dataShow.length}
+                totalPages={dataFiltered.length}
                 currentPage={page + 1}
                 handlePage={setPage}
                 totalData={data.length}

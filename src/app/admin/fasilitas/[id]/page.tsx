@@ -65,7 +65,6 @@ export default function DetailFasilitasPage() {
 
             setLoading(false);
             const fasilitas = await getFasilitasById(id);
-            console.log(fasilitas);
             const booking = await getBookingByIdFasilitas(id);
             const filteredBooking = booking.data.filter(
                 (data: BookingDTO) =>
@@ -349,15 +348,12 @@ export default function DetailFasilitasPage() {
                                 className={`
                             ${isTabActive("history") ? "block" : "hidden"}`}
                             >
-                                <TabHistoryBooking data={booking} page={page} />
-                                <div className="mb-10">
-                                    <Pagination
-                                        totalPages={totalPage}
-                                        currentPage={page + 1}
-                                        handlePage={setPage}
-                                        totalData={booking.length}
-                                    />
-                                </div>
+                                <TabHistoryBooking
+                                    data={booking}
+                                    page={page}
+                                    currentPage={page + 1}
+                                    handlePage={setPage}
+                                />
                             </div>
                             <div
                                 className={`
@@ -366,15 +362,9 @@ export default function DetailFasilitasPage() {
                                 <TabKamarAsrama
                                     data={kamar}
                                     page={pageAsrama}
+                                    currentPage={pageAsrama + 1}
+                                    handlePage={setPageAsrama}
                                 />
-                                <div className="mb-10">
-                                    <Pagination
-                                        totalPages={totalPageAsrama}
-                                        currentPage={pageAsrama + 1}
-                                        handlePage={setPageAsrama}
-                                        totalData={kamar.length}
-                                    />
-                                </div>
                             </div>
                             <div
                                 className={`
@@ -387,15 +377,9 @@ export default function DetailFasilitasPage() {
                                 <TabHistoryKamar
                                     data={historyKamar}
                                     page={pageHistoryKamar}
+                                    currentPage={pageHistoryKamar + 1}
+                                    handlePage={setPageHistoryKamar}
                                 />
-                                <div className="mb-10 w-[830px]">
-                                    <Pagination
-                                        totalPages={totalPageHistoryKamar}
-                                        currentPage={pageHistoryKamar + 1}
-                                        handlePage={setPageHistoryKamar}
-                                        totalData={historyKamar.length}
-                                    />
-                                </div>
                             </div>
                         </div>
                     </div>

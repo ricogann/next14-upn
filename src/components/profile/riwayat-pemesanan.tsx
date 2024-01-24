@@ -6,8 +6,7 @@ import TabUploadData from "./tab-uploaddata";
 import TabReviewBerkas from "./tab-reviewberkas";
 import TabCanceled from "./tab-cancelled";
 import TabFinished from "./tab-finished";
-
-import { getBookingByIdUser } from "@/hooks";
+import { getBookingByIdUser, getMisc } from "@/hooks";
 import { parseJwt } from "@/libs/auth";
 
 export default function RiwayatPemesanan() {
@@ -25,21 +24,22 @@ export default function RiwayatPemesanan() {
         async function initialize() {
             const account = parseJwt(Cookies.get("CERT"));
             const data = await getBookingByIdUser(account.id_account);
+            const misc = await getMisc();
 
             const onProcess = data.data.filter(
-                (item) => item.status === "Menunggu Konfirmasi"
+                (item: any) => item.status === "Menunggu Konfirmasi"
             );
             const onGoing = data.data.filter(
-                (item) => item.status === "Menunggu Berkas"
+                (item: any) => item.status === "Menunggu Berkas"
             );
             const review = data.data.filter(
-                (item) => item.status === "Review Berkas"
+                (item: any) => item.status === "Review Berkas"
             );
             const canceled = data.data.filter(
-                (item) => item.status === "Dibatalkan"
+                (item: any) => item.status === "Dibatalkan"
             );
             const finished = data.data.filter(
-                (item) => item.status === "Dikonfirmasi"
+                (item: any) => item.status === "Dikonfirmasi"
             );
 
             setDataOnProcess(onProcess);

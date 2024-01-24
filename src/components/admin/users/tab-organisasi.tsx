@@ -17,6 +17,8 @@ const TabOrganisasi: React.FC<Props> = ({ data }) => {
     const [eyeOpen, setEyeOpen] = useState(true);
     const [page, setPage] = useState(0);
     const [dataShow, setDataShow] = useState<any[]>([]);
+    const [searchText, setSearchText] = useState("");
+    const [dataFiltered, setDataFiltered] = useState<any[][]>([]);
     const [loading, setLoading] = useState(true);
     const [id, setId] = useState(0);
 
@@ -24,6 +26,20 @@ const TabOrganisasi: React.FC<Props> = ({ data }) => {
         setDataShow(splitData(data, 3));
         setLoading(false);
     }, [data]);
+
+    useEffect(() => {
+        const filteredDataOrganisasi = data.filter((item) =>
+            Object.values(item).some(
+                (value) =>
+                    typeof value === "string" &&
+                    value.toLowerCase().includes(searchText.toLowerCase())
+            )
+        );
+
+        setDataFiltered(splitData(filteredDataOrganisasi, 6));
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dataShow, searchText]);
 
     const handleUpdateStatus = async (
         id: number,
@@ -63,7 +79,8 @@ const TabOrganisasi: React.FC<Props> = ({ data }) => {
                 <input
                     className="w-auto h-[50px] px-5 py-3 bg-white border border-gray-300 rounded-xl text-[20px] font-bold outline-none"
                     type="text"
-                    placeholder="Cari Users Umum. . ."
+                    placeholder="Cari Users Organisasi. . ."
+                    onChange={(e) => setSearchText(e.target.value)}
                 />
                 <div className="min-w-full rounded-lg overflow-hidden">
                     <div className="flex mt-5">
@@ -97,8 +114,8 @@ const TabOrganisasi: React.FC<Props> = ({ data }) => {
                     </div>
 
                     <div className="flex flex-col rounded-b-lg bg-white divide-y divide-gray-200 text-black">
-                        {dataShow.length > 0 ? (
-                            dataShow[page].map(
+                        {dataFiltered.length > 0 ? (
+                            dataFiltered[page].map(
                                 (organisasi: Organisasi, index: number) => (
                                     <div className="flex" key={index}>
                                         <div className="px-6 py-4 w-[50px]">
@@ -226,7 +243,7 @@ const TabOrganisasi: React.FC<Props> = ({ data }) => {
                         )}
                     </div>
                     <Pagination
-                        totalPages={dataShow.length}
+                        totalPages={dataFiltered.length}
                         currentPage={page + 1}
                         handlePage={setPage}
                         totalData={data.length}

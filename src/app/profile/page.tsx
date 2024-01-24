@@ -11,6 +11,7 @@ import Loading from "@/components/ui/loading";
 const Profile = () => {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         async function initialize() {
             const cookie = getClientSideCookie();
@@ -24,10 +25,12 @@ const Profile = () => {
 
             setLoading(false);
         }
+
         initialize();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
     return (
         <>
             <div className="bg-[#2C666E] min-h-screen relative">

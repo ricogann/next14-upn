@@ -150,6 +150,7 @@ export default function AddFasilitas() {
                                                 onChange={handleChanges}
                                             />
                                         </div>
+
                                         <div className="">
                                             <h1 className="mb-1">
                                                 Alamat Fasilitas
@@ -173,7 +174,16 @@ export default function AddFasilitas() {
                                             />
                                         </div>
                                     </div>
-
+                                    <div className="pl-4 mb-3">
+                                        <h1 className="text-[12px]">
+                                            *Untuk menambah fasilitas Asrama,
+                                            beri nama hanya Asrama
+                                        </h1>
+                                        <h1 className="text-[12px]">
+                                            *Untuk menambah fasilitas Kantin,
+                                            beri nama hanya Kantin
+                                        </h1>
+                                    </div>
                                     <div className="px-4">
                                         <h1 className="mb-1">
                                             Deskripsi Fasilitas

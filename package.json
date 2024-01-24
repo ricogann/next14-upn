@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^3.3.4",
     "@types/crypto-js": "^4.2.1",
     "crypto-js": "^4.2.0",
     "daisyui": "^4.4.24",
