@@ -249,20 +249,20 @@ const TabBookings: React.FC<TabBookingsProps> = ({ data }) => {
                         ))
                     ) : (
                         <div className="">
-                            <div
-                                className={`relative left-[120%] flex items-center justify-center${
-                                    loading ? "" : "hidden"
-                                }`}
-                            >
-                                <Loading />
-                            </div>
-                            <div
-                                className={`text-white text-2xl fixed w-full left-[55%] ${
-                                    loading ? "hidden" : ""
-                                }`}
-                            >
-                                Data Kosong
-                            </div>
+                            {loading ? (
+                                <div
+                                    className={`relative left-[120%] flex items-center justify-center`}
+                                >
+                                    <Loading />
+                                </div>
+                            ) : (
+                                <div
+                                    className={`text-white text-2xl w-[1000px]`}
+                                >
+                                    Data kosong.. Masih belum ada yang upload
+                                    berkas
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

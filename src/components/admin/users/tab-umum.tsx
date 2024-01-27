@@ -8,6 +8,8 @@ import { updateStatusAccount } from "@/hooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Umum from "@/interfaces/usersDTO";
+import Image from "next/image";
+import ZoomComponent from "@/components/ui/zoom";
 
 interface Props {
     data: Umum[];
@@ -19,8 +21,10 @@ const TabUmum: React.FC<Props> = ({ data }) => {
     const [dataShow, setDataShow] = useState<Umum[] | any[]>([]);
     const [searchText, setSearchText] = useState("");
     const [dataFiltered, setDataFiltered] = useState<Umum[] | any[]>([]);
+    const [buktiIdentitasShow, setBuktiIdentitasShow] = useState("");
     const [loading, setLoading] = useState(true);
     const [id, setId] = useState(0);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const filteredDataUmum = data.filter((item) =>
@@ -74,6 +78,12 @@ const TabUmum: React.FC<Props> = ({ data }) => {
     };
     return (
         <>
+            {isModalOpen && (
+                <ZoomComponent
+                    bukti={buktiIdentitasShow}
+                    toggle={() => setIsModalOpen(false)}
+                />
+            )}
             <ToastContainer />
             <div className="flex flex-wrap overflow-hidden rounded-lg shadow-lg">
                 <input
@@ -151,18 +161,14 @@ const TabUmum: React.FC<Props> = ({ data }) => {
                                                     )}
                                                 </h1>
                                             </div>
-                                            <div className="">
+                                            <div className="ml-1">
                                                 <div
                                                     className={`text-xl ${
-                                                        eyeOpen &&
-                                                        id === umum.id_account
-                                                            ? ""
-                                                            : "hidden"
+                                                        eyeOpen ? "" : "hidden"
                                                     } cursor-pointer`}
-                                                    onClick={() => {
-                                                        setEyeOpen(false);
-                                                        setId(umum.id_account);
-                                                    }}
+                                                    onClick={() =>
+                                                        setEyeOpen(false)
+                                                    }
                                                 >
                                                     <AiFillEye />
                                                 </div>
@@ -170,9 +176,9 @@ const TabUmum: React.FC<Props> = ({ data }) => {
                                                     className={`text-xl ${
                                                         eyeOpen ? "hidden" : ""
                                                     } cursor-pointer`}
-                                                    onClick={() => {
-                                                        setEyeOpen(true);
-                                                    }}
+                                                    onClick={() =>
+                                                        setEyeOpen(true)
+                                                    }
                                                 >
                                                     <AiFillEyeInvisible />
                                                 </div>
@@ -186,7 +192,34 @@ const TabUmum: React.FC<Props> = ({ data }) => {
                                             </a>
                                         </div>
                                         <div className="px-6 py-4 w-[190px] flex items-center justify-center">
-                                            <div className="cursor-pointer"></div>
+                                            {umum.bukti_identitas
+                                                .toLowerCase()
+                                                .endsWith(".pdf") ? (
+                                                <a
+                                                    href={`${process.env.NEXT_PUBLIC_API_URL}/assets/${umum.bukti_identitas}`}
+                                                    target="_blank"
+                                                    className="cursor-pointer font-bold text-[#F0EDEE] bg-[#07393C] px-5 py-2 text-[13px] rounded-xl"
+                                                >
+                                                    View PDF
+                                                </a>
+                                            ) : (
+                                                <button
+                                                    onClick={() => {
+                                                        setIsModalOpen(true);
+                                                        setBuktiIdentitasShow(
+                                                            umum.bukti_identitas
+                                                        );
+                                                    }}
+                                                >
+                                                    <Image
+                                                        src={`${process.env.NEXT_PUBLIC_API_URL}/assets/${umum.bukti_identitas}`}
+                                                        alt="bukti-pembayaran"
+                                                        width={120}
+                                                        height={120}
+                                                        className="rounded-lg h-[80px] w-[130px] object-cover"
+                                                    />
+                                                </button>
+                                            )}
                                         </div>
                                         {umum.status ? (
                                             <div className="px-6 py-4  w-[80px] text-center text-green-800">
@@ -231,20 +264,19 @@ const TabUmum: React.FC<Props> = ({ data }) => {
                             )
                         ) : (
                             <div className="">
-                                <div
-                                    className={`fixed w-full left-[55%] ${
-                                        loading ? "" : "hidden"
-                                    }`}
-                                >
-                                    <Loading />
-                                </div>
-                                <div
-                                    className={`text-white text-2xl fixed w-full left-[55%] ${
-                                        loading ? "hidden" : ""
-                                    }`}
-                                >
-                                    Data Kosong
-                                </div>
+                                {loading ? (
+                                    <div
+                                        className={`relative left-[120%] flex items-center justify-center`}
+                                    >
+                                        <Loading />
+                                    </div>
+                                ) : (
+                                    <div
+                                        className={`text-white text-2xl w-[1000px]`}
+                                    >
+                                        Data kosong...
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>

@@ -8,6 +8,8 @@ import { updateStatusAccount } from "@/hooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UKM from "@/interfaces/usersDTO";
+import Image from "next/image";
+import ZoomComponent from "@/components/ui/zoom";
 
 interface Props {
     data: UKM[];
@@ -21,6 +23,8 @@ const TabUkm: React.FC<Props> = ({ data }) => {
     const [searchText, setSearchText] = useState("");
     const [loading, setLoading] = useState(true);
     const [id, setId] = useState(0);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [buktiIdentitasShow, setBuktiIdentitasShow] = useState("");
 
     useEffect(() => {
         setDataShow(splitData(data, 3));
@@ -74,6 +78,12 @@ const TabUkm: React.FC<Props> = ({ data }) => {
     };
     return (
         <>
+            {isModalOpen && (
+                <ZoomComponent
+                    bukti={buktiIdentitasShow}
+                    toggle={() => setIsModalOpen(false)}
+                />
+            )}
             <ToastContainer />
             <div className="flex flex-wrap overflow-hidden rounded-lg shadow-lg">
                 <input
@@ -180,7 +190,34 @@ const TabUkm: React.FC<Props> = ({ data }) => {
                                             </a>
                                         </div>
                                         <div className="px-6 py-4 text-[15px] w-[170px]">
-                                            <div className="cursor-pointer"></div>
+                                            {ukm.bukti_identitas
+                                                .toLowerCase()
+                                                .endsWith(".pdf") ? (
+                                                <a
+                                                    href={`${process.env.NEXT_PUBLIC_API_URL}/assets/${ukm.bukti_identitas}`}
+                                                    target="_blank"
+                                                    className="cursor-pointer font-bold text-[#F0EDEE] bg-[#07393C] px-5 py-2 text-[13px] rounded-xl"
+                                                >
+                                                    View PDF
+                                                </a>
+                                            ) : (
+                                                <button
+                                                    onClick={() => {
+                                                        setIsModalOpen(true);
+                                                        setBuktiIdentitasShow(
+                                                            ukm.bukti_identitas
+                                                        );
+                                                    }}
+                                                >
+                                                    <Image
+                                                        src={`${process.env.NEXT_PUBLIC_API_URL}/assets/${ukm.bukti_identitas}`}
+                                                        alt="bukti-pembayaran"
+                                                        width={120}
+                                                        height={120}
+                                                        className="rounded-lg h-[80px] w-[130px] object-cover"
+                                                    />
+                                                </button>
+                                            )}
                                         </div>
                                         {ukm.status ? (
                                             <div className="px-6 py-4 text-[15px] text-green-800 font-semibold w-[100px]">

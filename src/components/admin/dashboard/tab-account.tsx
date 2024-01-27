@@ -5,7 +5,9 @@ import Pagination from "@/components/ui/pagination";
 import { updateStatusAccount } from "@/hooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Image from "next/image";
 import AccountDTO from "@/interfaces/accountDTO";
+import ZoomComponent from "@/components/ui/zoom";
 
 interface TabAccountProps {
     data: AccountDTO[];
@@ -23,9 +25,38 @@ const TabAccount: React.FC<TabAccountProps> = ({ data }) => {
 
     const [loading, setLoading] = useState(true);
     const [dataShow, setDataShow] = useState<any[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [buktiIdentitas, setBuktiIdentitas] = useState<string[]>([]);
+    const [buktiIdentitasShow, setBuktiIdentitasShow] = useState<string>("");
     const [page, setPage] = useState(0);
 
     useEffect(() => {
+        const accountBukti: string[] = [];
+        const buktiPembayaranFilter = data.filter((item) => {
+            if (item.Mahasiswa.length > 0) {
+                item.Mahasiswa.map((item) => {
+                    accountBukti.push(item.bukti_identitas);
+                });
+            } else if (item.Dosen.length > 0) {
+                item.Dosen.map((item) => {
+                    accountBukti.push(item.bukti_identitas);
+                });
+            } else if (item.Umum.length > 0) {
+                item.Umum.map((item) => {
+                    accountBukti.push(item.bukti_identitas);
+                });
+            } else if (item.UKM.length > 0) {
+                item.UKM.map((item) => {
+                    accountBukti.push(item.bukti_identitas);
+                });
+            } else {
+                item.Organisasi.map((item) => {
+                    accountBukti.push(item.bukti_identitas);
+                });
+            }
+        });
+
+        setBuktiIdentitas(accountBukti);
         setDataShow(splitData(data, 6));
 
         if (dataShow.length > 0) {
@@ -34,6 +65,11 @@ const TabAccount: React.FC<TabAccountProps> = ({ data }) => {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const toggleModal = (value: string) => {
+        setIsModalOpen(!isModalOpen);
+        setBuktiIdentitasShow(value);
+    };
 
     const handleSubmit = async (
         id: number,
@@ -69,6 +105,12 @@ const TabAccount: React.FC<TabAccountProps> = ({ data }) => {
 
     return (
         <>
+            {isModalOpen && (
+                <ZoomComponent
+                    bukti={buktiIdentitasShow}
+                    toggle={() => toggleModal("")}
+                />
+            )}
             <ToastContainer />
             <div className="flex flex-col text-black">
                 <div className="grid grid-cols-3 mr-32 gap-5">
@@ -109,12 +151,44 @@ const TabAccount: React.FC<TabAccountProps> = ({ data }) => {
                                                 .toUpperCase() +
                                                 item.Role.nama_role.slice(1)}
                                         </p>
-                                        <p className="font-bold">
-                                            Bukti Identitas
-                                        </p>
-                                        <p className="font-regular mb-5 xl:mb-2">
-                                            Mahasiswaa
-                                        </p>
+                                        <div className="flex flex-row mt-4">
+                                            <div className="flex-col">
+                                                <div className="text-[14] font-bold mb-3">
+                                                    Bukti Registrasi
+                                                </div>
+                                                <div className="cursor-pointer h-[100px] w-[150px] ">
+                                                    {buktiIdentitas[index]
+                                                        .toLowerCase()
+                                                        .endsWith(".pdf") ? (
+                                                        <a
+                                                            href={`${process.env.NEXT_PUBLIC_API_URL}/assets/${buktiIdentitas[index]}`}
+                                                            target="_blank"
+                                                            className="cursor-pointer font-bold text-[#F0EDEE] bg-[#07393C] px-5 py-2 rounded-xl"
+                                                        >
+                                                            View PDF
+                                                        </a>
+                                                    ) : (
+                                                        <button
+                                                            onClick={() =>
+                                                                toggleModal(
+                                                                    buktiIdentitas[
+                                                                        index
+                                                                    ]
+                                                                )
+                                                            }
+                                                        >
+                                                            <Image
+                                                                src={`${process.env.NEXT_PUBLIC_API_URL}/assets/${buktiIdentitas[index]}`}
+                                                                alt="bukti-pembayaran"
+                                                                width={120}
+                                                                height={120}
+                                                                className="rounded-lg h-[100px] w-[150px] object-cover"
+                                                            />
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div className="flex flex-row justify-between mt-6">
                                             <button>
                                                 <p
@@ -153,20 +227,20 @@ const TabAccount: React.FC<TabAccountProps> = ({ data }) => {
                         )
                     ) : (
                         <div className="">
-                            <div
-                                className={`relative left-[120%] flex items-center justify-center${
-                                    loading ? "" : "hidden"
-                                }`}
-                            >
-                                <Loading />
-                            </div>
-                            <div
-                                className={`text-white text-2xl fixed w-full left-[55%] ${
-                                    loading ? "hidden" : ""
-                                }`}
-                            >
-                                Data Kosong
-                            </div>
+                            {loading ? (
+                                <div
+                                    className={`relative left-[120%] flex items-center justify-center`}
+                                >
+                                    <Loading />
+                                </div>
+                            ) : (
+                                <div
+                                    className={`text-white text-2xl w-[1000px]`}
+                                >
+                                    Data kosong.. Masih belum ada yang upload
+                                    berkas
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

@@ -256,20 +256,20 @@ const TabBerkas: React.FC<TabBerkasProps> = ({ data }) => {
                         )
                     ) : (
                         <div className="">
-                            <div
-                                className={`relative left-[120%] flex items-center justify-center${
-                                    loading ? "" : "hidden"
-                                }`}
-                            >
-                                <Loading />
-                            </div>
-                            <div
-                                className={`text-white text-2xl w-[1000px] ${
-                                    loading ? "hidden" : ""
-                                }`}
-                            >
-                                Data kosong.. Masih belum ada yang upload berkas
-                            </div>
+                            {loading ? (
+                                <div
+                                    className={`relative left-[120%] flex items-center justify-center`}
+                                >
+                                    <Loading />
+                                </div>
+                            ) : (
+                                <div
+                                    className={`text-white text-2xl w-[1000px]`}
+                                >
+                                    Data kosong.. Masih belum ada yang upload
+                                    berkas
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

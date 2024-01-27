@@ -4,7 +4,6 @@ const nextConfig = {
         domains: ["api.ricogann.com"],
         unoptimized: true,
     },
-    webpack5: true,
     webpack: (config) => {
         config.resolve.fallback = { fs: false };
 

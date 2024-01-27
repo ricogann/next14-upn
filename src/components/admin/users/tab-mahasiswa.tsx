@@ -8,6 +8,8 @@ import { updateStatusAccount } from "@/hooks";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Mahasiswa from "@/interfaces/usersDTO";
+import Image from "next/image";
+import ZoomComponent from "@/components/ui/zoom";
 
 interface Props {
     data: Mahasiswa[];
@@ -21,6 +23,9 @@ const TabMahasiswa: React.FC<Props> = ({ data }) => {
     const [loading, setLoading] = useState(true);
     const [id, setId] = useState(0);
     const [searchText, setSearchText] = useState("");
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [buktiIdentitasShow, setBuktiIdentitasShow] = useState("");
 
     useEffect(() => {
         setDataShow(splitData(data, 3));
@@ -74,6 +79,12 @@ const TabMahasiswa: React.FC<Props> = ({ data }) => {
     };
     return (
         <>
+            {isModalOpen && (
+                <ZoomComponent
+                    bukti={buktiIdentitasShow}
+                    toggle={() => setIsModalOpen(false)}
+                />
+            )}
             <ToastContainer />
             <div className="flex flex-wrap overflow-hidden rounded-lg shadow-lg">
                 <input
@@ -180,7 +191,34 @@ const TabMahasiswa: React.FC<Props> = ({ data }) => {
                                         </a>
                                     </div>
                                     <div className="px-6 py-4 text-[15px] w-[140px]">
-                                        <div className="cursor-pointer"></div>
+                                        {mahasiswa.bukti_identitas
+                                            .toLowerCase()
+                                            .endsWith(".pdf") ? (
+                                            <a
+                                                href={`${process.env.NEXT_PUBLIC_API_URL}/assets/${mahasiswa.bukti_identitas}`}
+                                                target="_blank"
+                                                className="cursor-pointer font-bold text-[#F0EDEE] bg-[#07393C] px-3 py-2 text-[13px] rounded-xl"
+                                            >
+                                                View PDF
+                                            </a>
+                                        ) : (
+                                            <button
+                                                onClick={() => {
+                                                    setIsModalOpen(true);
+                                                    setBuktiIdentitasShow(
+                                                        mahasiswa.bukti_identitas
+                                                    );
+                                                }}
+                                            >
+                                                <Image
+                                                    src={`${process.env.NEXT_PUBLIC_API_URL}/assets/${mahasiswa.bukti_identitas}`}
+                                                    alt="bukti-pembayaran"
+                                                    width={120}
+                                                    height={120}
+                                                    className="rounded-lg h-[80px] w-[130px] object-cover"
+                                                />
+                                            </button>
+                                        )}
                                     </div>
                                     {mahasiswa.status ? (
                                         <div className="px-6 py-4 text-[15px] text-green-800 font-semibold w-[100px]">
